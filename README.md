@@ -1,10 +1,8 @@
-# Veil
+# GreatSCT
 
-![Veil Logo](https://www.veil-framework.com/wp-content/uploads/2013/12/cropped-Veil-Symbol2.png "Veil Logo")
+GreatSCT is a tool designed to generate metasploit payloads that bypass common anti-virus solutions and application whitelisting solutions.
 
-Veil is a tool designed to generate metasploit payloads that bypass common anti-virus solutions.
-
-Veil is current under support by @ChrisTruncer
+GreatSCT is current under support by @ConsciousHacker
 
 ## Software Requirements:
 
@@ -20,18 +18,12 @@ Run `./setup.sh -c` on Linux.
 
 Install by cloning from git, not via apt!
 
-### For Py2Exe
-
-> NOTE: Using Py2Exe is recommended over Pyinstaller for lower detection rate.
-
-Install [Python 3.3](https://www.python.org/downloads/release/python-335/), [Py2Exe](https://pypi.python.org/pypi/py2exe/), [PyCrypto](http://www.voidspace.org.uk/python/modules.shtml#pycrypto), and [PyWin32](https://sourceforge.net/projects/pywin32/files/pywin32/Build%20221/) on a Windows computer.
-
 ### Quick Install
 
 ```bash
 apt-get -y install git
-git clone https://github.com/Veil-Framework/Veil.git
-cd Veil/
+git clone https://github.com/ConsciousHacker/GreatSCT.git
+cd GreatSCT/
 cd setup
 sudo ./setup.sh -c
 ```
@@ -51,3 +43,6 @@ It is important that you are in the config/ directory before executing update.py
 ```
 
 Don't panic. Enter the config/ dir and re-run update.py.
+
+### Special thanks
+https://github.com/veil-Framework/

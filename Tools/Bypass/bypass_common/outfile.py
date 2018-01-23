@@ -228,6 +228,12 @@ def compiler(payload_object, invoked=False, cli_object=None):
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
             print(" [*] Source code written to: " + helpers.color(source_code_filepath))
 
+        elif payload_object.language == 'msbuild':
+            bypass_helpers.title_screen()
+            print_payload_information(payload_object)
+            print(" [*] MSBuild compiles for  us, so you just get xml :)")
+            print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+
         elif payload_object.language == 'c':
             if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
                 # Compile our C code into an executable and pass a compiler flag to prevent it from opening a command prompt when run

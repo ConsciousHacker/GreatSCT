@@ -757,6 +757,7 @@ def senecas_games(bypass_payload):
         return check_code, num_tabs_required
 
     elif bypass_payload.language == 'msbuild':
+        check_code += "\npublic override bool Execute()\n{\n"
         if bypass_payload.required_options["EXPIRE_PAYLOAD"][0].lower() != "x":
 
             RandToday = bypass_helpers.randomString()
@@ -784,12 +785,12 @@ def senecas_games(bypass_payload):
             # Add a tab for this check
             num_tabs_required += 1
 
-        if bypass_payload.required_options["DEBUGGER"][0].lower() != 'x':
+        # if bypass_payload.required_options["DEBUGGER"][0].lower() != 'x':
 
-            check_code += '\t' * num_tabs_required + 'if (!System.Diagnostics.Debugger.IsAttached) {\n'
+        #     check_code += '\t' * num_tabs_required + 'if (!System.Diagnostics.Debugger.IsAttached) {\n'
 
-            # Add a tab for this check
-            num_tabs_required += 1
+        #     # Add a tab for this check
+        #     num_tabs_required += 1
 
         #if bypass_payload.required_options["BADMACS"][0].lower() != 'x':
         #    pass

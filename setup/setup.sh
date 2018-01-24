@@ -87,7 +87,7 @@ func_check_env(){
     echo -e "\n [?] ${BOLD}Are you sure you wish to install GreatSCT?${RESET}\n"
     echo -e "     Continue with installation? ([${BOLD}y${RESET}]/[${GREEN}S${RESET}]ilent/[${BOLD}n${RESET}]o): ${GREEN}S${RESET}"
   else
-    echo -e "\n [?] ${BOLD}Are you sure you wish to install GreatSCT?${RESET}\n"
+    echo -e "\n [?] ${BOLD}Are you sure yoau wish to install GreatSCT?${RESET}\n"
     read -p '     Continue with installation? ([y]/[s]ilent/[N]o): ' installgreatsct
     if [ "${installgreatsct}" == 's' ]; then
       silent=true
@@ -120,6 +120,7 @@ func_package_deps(){
       echo -e "\n\n [*] ${YELLOW}Silent Mode${RESET}: ${GREEN}Enabled${RESET}\n"
       arg=" DEBIAN_FRONTEND=noninteractive"
     fi
+  fi
 
   # Start dependency install
   echo -e "\n\n [*] ${YELLOW}Installing dependencies${RESET}"

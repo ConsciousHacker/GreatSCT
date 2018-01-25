@@ -18,7 +18,7 @@ class PayloadModule:
 
     def __init__(self, cli_obj):
         # required options
-        self.description = "pure msbuild windows/meterpreter/reverse_http stageless"
+        self.description = "pure msbuild windows/meterpreter/reverse_http stager"
         self.language = "msbuild"
         self.extension = "xml"
         self.rating = "Excellent"

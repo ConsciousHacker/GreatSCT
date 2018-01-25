@@ -153,31 +153,10 @@ def compiler(payload_object, invoked=False, cli_object=None):
             else:
                 print(helpers.color(" [!] ERROR: Invalid python extension in payload module.\n", warning=True))
 
-        elif payload_object.language == 'ruby':
-            if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
-                os.system('WINEPREFIX=' + settings.WINEPREFIX + ' wine ' + settings.WINEPREFIX + '/drive_c/Ruby187/bin/ruby.exe ' + settings.WINEPREFIX + '/drive_c/Ruby187/bin/ocra --windows '+ source_code_filepath + ' --output ' + executable_filepath + ' ' + settings.WINEPREFIX + '/drive_c/Ruby187/lib/ruby/gems/1.8/gems/win32-api-1.4.8-x86-mingw32/lib/win32/*')
-
-                bypass_helpers.title_screen()
-
-                if os.path.isfile(executable_filepath):
-                    hash_executable(executable_filepath, file_name)
-                    print_payload_information(payload_object)
-                    print(" [*] Executable written to: " + helpers.color(executable_filepath))
-                else:
-                    print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
-            print(" [*] Source code written to: " + helpers.color(source_code_filepath))
-
         elif payload_object.language == 'powershell':
             bypass_helpers.title_screen()
             print_payload_information(payload_object)
             print(" [*] PowerShell doesn't compile, so you just get text :)")
-            print(" [*] Source code written to: " + helpers.color(source_code_filepath))
-
-        elif payload_object.language == 'perl':
-            print_payload_information(payload_object)
-            print("\nPerl can't currently be compiled in Linux. Install on Windows:")
-            print("https://www.greatsct-framework.com/perl-of-no-hope-january-v-day-2016/")
-            print("Command: pp -gui -o <executablename> <sourcecodefile.pl>")
             print(" [*] Source code written to: " + helpers.color(source_code_filepath))
 
         elif payload_object.language == 'native':
@@ -192,26 +171,6 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 print(" [*] Exe file written to: " + helpers.color(path_here))
             else:
                 print(helpers.color(" [!] ERROR: Unable to create Exe file.", warning=True))
-
-        elif payload_object.language == 'lua':
-            print_payload_information(payload_object)
-            print(" [*] Lua currently doesn't compile in linux, so you just get text :)")
-            print(" [*] Source code written to: " + helpers.color(source_code_filepath))
-
-        elif payload_object.language == 'go':
-            if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
-                # Compile go payload
-                os.system('env GOROOT=/usr/local/go GOOS=windows GOARCH=386 /usr/bin/go build -ldflags "-s -w -H=windowsgui" -v -o ' + executable_filepath + ' ' + source_code_filepath)
-
-                bypass_helpers.title_screen()
-
-                if os.path.isfile(executable_filepath):
-                    hash_executable(executable_filepath, file_name)
-                    print_payload_information(payload_object)
-                    print(" [*] Executable written to: " + helpers.color(executable_filepath))
-                else:
-                    print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
-            print(" [*] Source code written to: " + helpers.color(source_code_filepath))
 
         elif payload_object.language == 'cs':
             if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
@@ -234,10 +193,10 @@ def compiler(payload_object, invoked=False, cli_object=None):
             print(" [*] MSBuild compiles for  us, so you just get xml :)")
             print(" [*] Source code written to: " + helpers.color(source_code_filepath))
 
-        elif payload_object.language == 'c':
+        elif payload_object.language == 'installutil':
             if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
-                # Compile our C code into an executable and pass a compiler flag to prevent it from opening a command prompt when run
-                os.system('i686-w64-mingw32-gcc -Wl,-subsystem,windows ' + source_code_filepath + ' -o ' + executable_filepath + " -lwsock32")
+                # Compile our CS code into an executable and pass a compiler flag to prevent it from opening a command prompt when run
+                os.system('mcs -platform:x86 -target:winexe -r:System.Configuration.Install ' + source_code_filepath + ' -out:' + executable_filepath)
 
                 bypass_helpers.title_screen()
 
@@ -249,10 +208,12 @@ def compiler(payload_object, invoked=False, cli_object=None):
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
             print(" [*] Source code written to: " + helpers.color(source_code_filepath))
 
-        elif payload_object.language == 'autoit':
+        elif payload_object.language == 'c':
             if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
-                # Compile autoit code
-                os.system('WINEPREFIX=' + settings.WINEPREFIX + ' wine ' + settings.WINEPREFIX + 'drive_c/Program\ Files/AutoIt3/Aut2Exe/Aut2exe.exe /in ' + source_code_filepath + ' /out ' + executable_filepath + ' /comp 2 /nopack')
+                # Compile our C code into an executable and pass a compiler flag to prevent it from opening a command prompt when run
+                os.system('i686-w64-mingw32-gcc -Wl,-subsystem,windows ' + source_code_filepath + ' -o ' + executable_filepath + " -lwsock32")
+
+                bypass_helpers.title_screen()
 
                 if os.path.isfile(executable_filepath):
                     hash_executable(executable_filepath, file_name)

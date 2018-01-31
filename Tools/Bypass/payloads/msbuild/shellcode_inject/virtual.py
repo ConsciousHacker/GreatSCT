@@ -23,7 +23,7 @@ class PayloadModule:
         # required
         self.language = "msbuild"
         self.extension = "xml"
-        self.rating = "Excellent"
+        self.rating = "Poor"
         self.description = "MSBuild C# VirtualAlloc method for inline shellcode injection"
         self.name = "MSBuild C# Flat Shellcode Injector"
         self.path = "msbuild/shellcode_inject/virtual"

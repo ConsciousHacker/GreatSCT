@@ -13,9 +13,9 @@ This is the GreatSCT 1.0 development roadmap.
 - [ ] msbuild/powershell/script.py
 
 ### InstallUtil
-- [ ] installutil/meterpreter/rev_https
-- [ ] installutil/meterpreter/rev_http
-- [ ] installutil/meterpreter/rev_tcp
+- [x] installutil/meterpreter/rev_https - Chris
+- [x] installutil/meterpreter/rev_http - Chris
+- [x] installutil/meterpreter/rev_tcp - Chris
 - [ ] installutil/shellcode_inject/virtual.py
 - [x] installutil/shellcode_inject/base64.py - Chris
 - [ ] installutil/powershell/cmd.py

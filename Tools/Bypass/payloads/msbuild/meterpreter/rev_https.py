@@ -35,7 +35,7 @@ class PayloadModule:
         # options we require user interaction for- format is {Option : [Value, Description]]}
         self.required_options = {
                                     "LHOST"            : ["", "IP of the Metasploit handler"],
-                                    "LPORT"            : ["8080", "Port of the Metasploit handler"],
+                                    "LPORT"            : ["443", "Port of the Metasploit handler"],
                                     "INJECT_METHOD"  : ["Virtual", "Virtual or Heap"],
                                     "EXPIRE_PAYLOAD" : ["X", "Optional: Payloads expire after \"Y\" days"],
                                     "HOSTNAME"       : ["X", "Optional: Required system hostname"],

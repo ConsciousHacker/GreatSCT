@@ -547,7 +547,8 @@ def senecas_games(bypass_payload):
         # Return check information
         return check_code, num_tabs_required
 
-    elif bypass_payload.language == 'powershell':
+    elif bypass_payload.language == 'msbuild_powershell':
+        check_code += "\npublic override bool Execute()\n{\n"
         if bypass_payload.required_options["HOSTNAME"][0].lower() != "x":
             check_code += "if($env:computername -eq \"" + bypass_payload.required_options["HOSTNAME"][0].lower() + "\") {\n"
             num_tabs_required += 1
@@ -784,16 +785,6 @@ def senecas_games(bypass_payload):
 
             # Add a tab for this check
             num_tabs_required += 1
-
-        # if bypass_payload.required_options["DEBUGGER"][0].lower() != 'x':
-
-        #     check_code += '\t' * num_tabs_required + 'if (!System.Diagnostics.Debugger.IsAttached) {\n'
-
-        #     # Add a tab for this check
-        #     num_tabs_required += 1
-
-        #if bypass_payload.required_options["BADMACS"][0].lower() != 'x':
-        #    pass
 
         if bypass_payload.required_options["DOMAIN"][0].lower() != "x":
 

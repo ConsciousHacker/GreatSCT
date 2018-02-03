@@ -50,7 +50,8 @@ class PayloadModule:
             "MINBROWSERS"    : ["FALSE", "Minimum of 2 browsers"],
             "BADMACS"        : ["FALSE", "Checks for known bad mac addresses"],
             "MINPROCESSES"   : ["X", "Minimum number of processes running"],
-            "SLEEP"          : ["X", "Optional: Sleep \"Y\" seconds, check if accelerated"]
+            "SLEEP"          : ["X", "Optional: Sleep \"Y\" seconds, check if accelerated"],
+            "OBFUSCATION"    : ["X", "Optional: Use python Invoke-Obfuscation on the powershell script"]
                                 }
 
     def generate(self):
@@ -101,7 +102,9 @@ class PayloadModule:
         with open(self.required_options["SCRIPT"][0], "r") as f:
             the_script = f.read()
 
-        the_script = invoke_obfuscation.asciiEncode(the_script)
+        if self.required_options["OBFUSCATION"][0].lower() != "x":
+            the_script = invoke_obfuscation.asciiEncode(the_script)
+
         encodedScriptContents = base64.b64encode(bytes(the_script, 'latin-1')).decode('ascii')
         encodedScript = bypass_helpers.randomString()
         powershellCmd = bypass_helpers.randomString()

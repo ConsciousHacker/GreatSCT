@@ -14,6 +14,7 @@ from Tools.Bypass.bypass_common import encryption
 from Tools.Bypass.bypass_common import bypass_helpers
 from Tools.Bypass.bypass_common import gamemaker
 from Tools.Bypass.bypass_common import shellcode_help
+from Tools.Bypass.bypass_common import invoke_obfuscation
 
 
 class PayloadModule:
@@ -100,9 +101,7 @@ class PayloadModule:
         with open(self.required_options["SCRIPT"][0], "r") as f:
             the_script = f.read()
 
-        print(the_script)
-
-
+        the_script = invoke_obfuscation.asciiEncode(the_script)
         encodedScriptContents = base64.b64encode(bytes(the_script, 'latin-1')).decode('ascii')
         encodedScript = bypass_helpers.randomString()
         powershellCmd = bypass_helpers.randomString()

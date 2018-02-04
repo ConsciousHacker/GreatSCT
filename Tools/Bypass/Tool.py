@@ -55,40 +55,40 @@ class Tools:
             "options": "Show the shellcode's options"
         }
 
-    # def check_vt(self, interactive=True):
-    #     """
-    #     Checks payload hashes in greatsct-output/hashes.txt vs VirusTotal
-    #     """
+    def check_vt(self, interactive=True):
+        """
+        Checks payload hashes in greatsct-output/hashes.txt vs VirusTotal
+        """
 
-    #     # Command for in-menu vt-notify check against hashes within hash file
-    #     # It's only triggered if selected in menu and file isn't empty
-    #     try:
-    #         if os.stat(settings.HASH_LIST)[6] != 0:
-    #             checkVTcommand = settings.GREATSCT_BYPASS_PATH + "Tools/Bypass/scripts/vt-notify/vt-notify.rb -f " + settings.HASH_LIST + " -i 0"
-    #             print(helpers.color("\n [*] Checking Virus Total for payload hashes...\n"))
-    #             checkVTout = subprocess.check_output(checkVTcommand, shell=True)
-    #             checkVTout = checkVTout.decode('ascii')
-    #             checkVTout = checkVTout.split('\n')
+        # Command for in-menu vt-notify check against hashes within hash file
+        # It's only triggered if selected in menu and file isn't empty
+        try:
+            if os.stat(settings.HASH_LIST)[6] != 0:
+                checkVTcommand = settings.GREATSCT_BYPASS_PATH + "Tools/Bypass/scripts/vt-notify/vt-notify.rb -f " + settings.HASH_LIST + " -i 0"
+                print(helpers.color("\n [*] Checking Virus Total for payload hashes...\n"))
+                checkVTout = subprocess.check_output(checkVTcommand, shell=True)
+                checkVTout = checkVTout.decode('ascii')
+                checkVTout = checkVTout.split('\n')
 
-    #             found = False
-    #             for line in checkVTout:
-    #                 if "was found" in line:
-    #                     filehash, filename = line.split()[0].split(":")
-    #                     print(helpers.color(" [!] File %s with hash %s found!" % (filename, filehash), warning=True))
-    #                     found = True
-    #             if found is False:
-    #                 print(" [*] No payloads found on VirusTotal!")
+                found = False
+                for line in checkVTout:
+                    if "was found" in line:
+                        filehash, filename = line.split()[0].split(":")
+                        print(helpers.color(" [!] File %s with hash %s found!" % (filename, filehash), warning=True))
+                        found = True
+                if found is False:
+                    print(" [*] No payloads found on VirusTotal!")
 
-    #             input("\n [>] Press any key to continue...")
+                input("\n [>] Press any key to continue...")
 
-    #         else:
-    #             print(helpers.color("\n [!] Hash file is empty, generate a payload first!", warning=True))
-    #             input("\n [>] Press any key to continue...")
+            else:
+                print(helpers.color("\n [!] Hash file is empty, generate a payload first!", warning=True))
+                input("\n [>] Press any key to continue...")
 
-    #     except OSError:
-    #         print(helpers.color("\n [!] Error: hash list %s not found" % (settings.HASH_LIST), warning=True))
-    #         input("\n [>] Press any key to continue...")
-    #     return
+        except OSError:
+            print(helpers.color("\n [!] Error: hash list %s not found" % (settings.HASH_LIST), warning=True))
+            input("\n [>] Press any key to continue...")
+        return
 
     def clean_artifacts(self, interactive=True):
         """

@@ -28,7 +28,6 @@ if os.path.exists("/etc/greatsct/settings.py"):
 
 sys.path.insert(0, settings.GREATSCT_BYPASS_PATH)
 
-
 class Shellcode:
     """
     Class that represents a shellcode object, custom of msfvenom generated.
@@ -51,8 +50,6 @@ class Shellcode:
         self.required_options = list()
         # load up all the metasploit modules available
         self.LoadModules()
-        # Used when Ordnance generates shellcode
-        self.invoke_ordnance = False
         self.ord_lhost = None
         self.ord_lport = None
         # Load cli options
@@ -185,11 +182,10 @@ class Shellcode:
             bypass_helpers.title_screen()
 
         print(' [?] Generate or supply custom shellcode?\n')
-        print('     %s - Ordnance %s' % (helpers.color('1'), helpers.color('(default)', yellow=True)))
-        print('     %s - MSFVenom' % (helpers.color('2')))
-        print('     %s - custom shellcode string' % (helpers.color('3')))
-        print('     %s - file with shellcode (\\x41\\x42..)' % (helpers.color('4')))
-        print('     %s - binary file with shellcode\n' % helpers.color('5'))
+        print('     %s - MSFVenom' % (helpers.color('1')),  helpers.color('(default)', yellow=True))
+        print('     %s - custom shellcode string' % (helpers.color('2')))
+        print('     %s - file with shellcode (\\x41\\x42..)' % (helpers.color('3')))
+        print('     %s - binary file with shellcode\n' % helpers.color('4'))
 
         try:
             choice = self.required_options['SHELLCODE'][0].lower().strip()
@@ -197,7 +193,7 @@ class Shellcode:
         except:
             choice = input(" [>] Please enter the number of your choice: ").strip()
 
-        if choice == '4':
+        if choice == '3':
             # instantiate our completer object for path completion
             comp = completer.PathCompleter()
 
@@ -233,7 +229,7 @@ class Shellcode:
             # remove the completer
             readline.set_completer(None)
 
-        elif choice == '5':
+        elif choice == '4':
             # instantiate our completer object for path completion
             comp = completer.PathCompleter()
 
@@ -263,22 +259,19 @@ class Shellcode:
                 binary_code += "\\x" + hex(byte)[2:].zfill(2)
             return binary_code
 
-        elif choice == '3' or choice == 'string':
+        elif choice == '2' or choice == 'string':
             # if the shellcode is specified as a string
             cust_sc = input(" [>] Please enter custom shellcode (one line, no quotes, \\x00.. format): ")
             if len(cust_sc) == 0:
                 print(helpers.color(" [!] WARNING: no shellcode specified, defaulting to msfvenom!", warning=True))
             return cust_sc
 
-        elif choice == '' or choice == '1' or choice.lower() == 'veil-ordnance' or choice.lower() == 'ordnance':
-            return 'ordnance'
-
-        elif choice == '2' or choice.lower() == 'msf' or choice.lower() == 'metasploit' or choice.lower() == 'msfvenom':
+        elif choice == '1' or choice.lower() == 'msf' or choice.lower() == 'metasploit' or choice.lower() == 'msfvenom':
             return None
 
         else:
-            print(helpers.color(" [!] WARNING: Invalid option chosen, defaulting to Ordnance!", warning=True))
-            return 'ordnance'
+            print(helpers.color(" [!] WARNING: Invalid option chosen, defaulting to msfvenom!", warning=True))
+            return 'metasploit'
 
     def menu(self):
         """
@@ -304,11 +297,7 @@ class Shellcode:
             custom_shellcode = self.payload_selection_menu(showMessage)
 
             # if custom shellcode is specified, set it
-            if custom_shellcode == "ordnance":
-                # Start figuring out Ordnance stuff here
-                self.invoke_ordnance = True
-
-            elif custom_shellcode:
+            if custom_shellcode:
                 self.custom_shellcode = custom_shellcode
 
             # else, if no custom shellcode is specified, prompt for metasploit
@@ -502,17 +491,6 @@ class Shellcode:
         # return custom specified shellcode if it was set previously
         if self.custom_shellcode != "":
             return self.custom_shellcode
-
-        elif self.invoke_ordnance:
-            ordnance_loop = True
-            Ordnance_object = Ordnance_Import.Tools()
-            while ordnance_loop:
-                Ordnance_object.tool_main_menu(invoked=True)
-                if Ordnance_object.final_shellcode != '':
-                    self.payload_choice = Ordnance_object.selected_payload
-                    self.shellcode_options = Ordnance_object.payload_options
-                    ordnance_loop = False
-                    return Ordnance_object.final_shellcode
 
         # generate the shellcode using msfvenom
         else:

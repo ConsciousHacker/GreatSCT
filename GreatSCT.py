@@ -37,50 +37,28 @@ if __name__ == "__main__":
         '--port', metavar="Port Number", default=443, type=int,
         help="Port number to connect to.")
 
-    veilevasion = parser.add_argument_group('Great Scott Options')
-    veilevasion.add_argument(
+    greatsctbypass = parser.add_argument_group('Great Scott Options')
+    greatsctbypass.add_argument(
         '-c', metavar='OPTION1=value OPTION2=value', nargs='*',
         default=None, help='Custom payload module options.')
-    veilevasion.add_argument(
+    greatsctbypass.add_argument(
         '-o', metavar="OUTPUT NAME", default="payload",
         help='Output file base name for source and compiled binaries.')
-    veilevasion.add_argument(
+    greatsctbypass.add_argument(
         '-p', metavar="PAYLOAD", nargs='?', const="list",
         help='Payload to generate. Lists payloads if none specified.')
-    veilevasion.add_argument(
+    greatsctbypass.add_argument(
         '--clean', action='store_true',
         help='Clean out payload folders.')
-    veilevasion.add_argument(
+    greatsctbypass.add_argument(
         '--msfoptions', metavar="OPTION=value", nargs='*',
         help='Options for the specified metasploit payload.')
-    veilevasion.add_argument(
+    greatsctbypass.add_argument(
         '--msfvenom', metavar="windows/meterpreter/reverse_tcp", nargs='?',
         default='windows/meterpreter/reverse_tcp', help='Metasploit shellcode to generate.')
-    veilevasion.add_argument(
+    greatsctbypass.add_argument(
         '--compiler', metavar="pyinstaller", default='pyinstaller',
         help='Compiler option for payload (currently only needed for Python)')
-
-    # ordnance_shellcode = parser.add_argument_group('GreatSCT-Ordnance Shellcode Options')
-    # ordnance_shellcode.add_argument(
-    #     "--ordnance-payload", metavar="rev_tcp", default=None,
-    #     help="Payload type (bind_tcp, rev_tcp, etc.)")
-    # ordnance_shellcode.add_argument(
-    #     '--list-payloads', default=False, action='store_true',
-    #     help="Lists all available payloads.")
-
-    # ordnance_encoder = parser.add_argument_group('GreatSCT-Ordnance Encoder Options')
-    # ordnance_encoder.add_argument(
-    #     "-e", "--encoder", metavar="Encoder Name", default=None,
-    #     help="Name of Shellcode Encoder to use")
-    # ordnance_encoder.add_argument(
-    #     "-b", "--bad-chars", metavar="\\\\x00\\\\x0a..", default=None,
-    #     help="Bad characters to avoid")
-    # ordnance_encoder.add_argument(
-    #     '--list-encoders', default=False, action='store_true',
-    #     help="Lists all available encoders.")
-    # ordnance_encoder.add_argument(
-    #     '--print-stats', default=False, action='store_true',
-    #     help="Print information about the encoded shellcode.")
 
     args = parser.parse_args()
 

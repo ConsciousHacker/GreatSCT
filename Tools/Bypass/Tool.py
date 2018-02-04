@@ -28,7 +28,6 @@ if os.path.exists("/etc/greatsct/settings.py"):
 
 sys.path.insert(0, settings.GREATSCT_BYPASS_PATH)
 
-
 class Tools:
 
     def __init__(self, cli_options=None):
@@ -113,7 +112,7 @@ class Tools:
             os.system('rm -f %s/*.*' % (settings.PAYLOAD_SOURCE_PATH))
 
             print(" [*] Cleaning %s" % (settings.PAYLOAD_COMPILED_PATH))
-            os.system('rm -f %s/*.exe' % (settings.PAYLOAD_COMPILED_PATH))
+            os.system('rm -f %s/*.*' % (settings.PAYLOAD_COMPILED_PATH))
 
             print(" [*] Cleaning %s" % (settings.HANDLER_PATH))
             os.system('rm -f %s/*.rc' % (settings.HANDLER_PATH))
@@ -135,7 +134,7 @@ class Tools:
             user_cli_payload = self.return_payload_object(self.command_options.p)
             if not user_cli_payload:
                 print(helpers.color("[*] Error: You did not provide a valid payload selection!", warning=True))
-                print(helpers.color("[*] Ex: info 2 or info lua/shellcode_inject/flat.py", warning=True))
+                print(helpers.color("[*] Ex: info 2 or info msbuild/shellcode_inject/virutal.py", warning=True))
                 sys.exit()
             if self.command_options.ip is None and ("meterpreter" in user_cli_payload.path or "shellcode_inject" in user_cli_payload.path):
                 print(helpers.color("[*] Error: You did not provide an IP/domain to connect to/bind on", warning=True))
@@ -332,7 +331,7 @@ class Tools:
                     if not selected_payload_module:
                         print()
                         print(helpers.color("[*] Error: You did not provide a valid payload selection!", warning=True))
-                        print(helpers.color("[*] Ex: info 2 or info lua/shellcode_inject/flat.py", warning=True))
+                        print(helpers.color("[*] Ex: info 2 or info msbuild/shellcode_inject/virtual.py", warning=True))
                         print()
                         bypass_main_command = ''
                         show_bypass_menu = False
@@ -344,7 +343,7 @@ class Tools:
                 else:
                     print()
                     print(helpers.color("[*] Error: You did not provide a valid payload selection!", warning=True))
-                    print(helpers.color("[*] Ex: info 2 or info lua/shellcode_inject/flat.py", warning=True))
+                    print(helpers.color("[*] Ex: info 2 or info msbuild/shellcode_inject/virtual.py", warning=True))
                     print()
                     bypass_main_command = ''
                     show_bypass_menu = False
@@ -364,7 +363,7 @@ class Tools:
                     if not selected_payload_module:
                         print()
                         print(helpers.color("[*] Error: You did not provide a valid payload selection!", warning=True))
-                        print(helpers.color("[*] Ex: info 2 or info lua/shellcode_inject/flat.py", warning=True))
+                        print(helpers.color("[*] Ex: info 2 or info msbuild/shellcode_inject/virtual.py", warning=True))
                         print()
                         bypass_main_command = ''
                         show_bypass_menu = False
@@ -376,7 +375,7 @@ class Tools:
                 else:
                     print()
                     print(helpers.color("[*] Error: You did not provide a valid payload selection!", warning=True))
-                    print(helpers.color("[*] Ex: use 2 or use lua/shellcode_inject/flat.py", warning=True))
+                    print(helpers.color("[*] Ex: use 2 or use msbuild/shellcode_inject/virtual.py", warning=True))
                     print()
                     bypass_main_command = ''
                     show_bypass_menu = False

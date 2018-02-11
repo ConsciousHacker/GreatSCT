@@ -168,7 +168,7 @@ def senecas_games(bypass_payload):
         # Return check information
         return check_code, num_tabs_required
 
-    elif bypass_payload.language == 'regasm':
+    elif bypass_payload.language == 'regasm' or 'regsvcs':
         if bypass_payload.required_options["EXPIRE_PAYLOAD"][0].lower() != "x":
 
             RandToday = bypass_helpers.randomString()

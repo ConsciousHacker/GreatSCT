@@ -20,7 +20,7 @@ class PayloadModule:
         self.extension = "cs"
         self.rating = "Excellent"
         self.description = "pure regasm windows/meterpreter/reverse_https stager"
-        self.name = "Regasm C# Flat Shellcode Injector"
+        self.name = "Pure Regasm C# Reverse HTTP Stager"
         self.path = "regasm/meterpreter/rev_https"
         self.cli_opts = cli_obj
         self.payload_source_code = ''

@@ -1,6 +1,6 @@
 """
 
-MSBuild C# powershell embeded script execution.
+MSBuild C# unmanaged powershell embedded script execution.
 Uses basic variable renaming obfuscation.
 Optional: Obfuscate powershell embedded script with Invoke-Obfuscation
 
@@ -11,10 +11,8 @@ Module built by @ConsciousHacker
 """
 
 import base64
-from Tools.Bypass.bypass_common import encryption
 from Tools.Bypass.bypass_common import bypass_helpers
 from Tools.Bypass.bypass_common import gamemaker
-from Tools.Bypass.bypass_common import shellcode_help
 from Tools.Bypass.bypass_common import invoke_obfuscation
 
 
@@ -25,8 +23,8 @@ class PayloadModule:
         self.language = "msbuild"
         self.extension = "xml"
         self.rating = "Excellent"
-        self.description = "MSBuild C# powershell embedded script execution"
-        self.name = "MSBuild C# Flat Shellcode Injector"
+        self.description = "MSBuild C# unmanaged powershell embedded script execution"
+        self.name = "MSBuild C# Unmanaged powershell embedded script execution"
         self.path = "msbuild/powershell/script"
         self.cli_opts = cli_obj
         self.payload_source_code = ''

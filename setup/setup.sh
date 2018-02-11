@@ -254,6 +254,14 @@ else
   fi
 fi
 
+mkdir /tmp/nuget/
+wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O /tmp/nuget/nuget
+chmod +x /tmp/nuget/nuget
+/tmp/nuget/nuget install System.Management.Automation -OutputDirectory /tmp/nuget/
+mkdir /usr/share/powershell/
+cp /tmp/nuget/*/lib/net45/System.Management.Automation.dll /usr/share/powershell/System.Management.Automation.dll
+rm -rf /tmp/nuget
+
 # Trap ctrl-c
 trap ctrl_c INT
 

@@ -56,9 +56,6 @@ if __name__ == "__main__":
     greatsctbypass.add_argument(
         '--msfvenom', metavar="windows/meterpreter/reverse_tcp", nargs='?',
         default='windows/meterpreter/reverse_tcp', help='Metasploit shellcode to generate.')
-    greatsctbypass.add_argument(
-        '--compiler', metavar="pyinstaller", default='pyinstaller',
-        help='Compiler option for payload (currently only needed for Python)')
 
     args = parser.parse_args()
 

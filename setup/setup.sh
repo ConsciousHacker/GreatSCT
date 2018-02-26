@@ -28,6 +28,7 @@ else
 fi
 userprimarygroup="$(id -Gn "${trueuser}" | cut -d' ' -f1)"
 rootdir=$(cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd)
+winedir="$userhomedir/.greatsct"
 BOLD="\033[01;01m"     # Highlight
 RED="\033[01;31m"      # Issues/Errors
 GREEN="\033[01;32m"    # Success
@@ -44,13 +45,14 @@ func_title(){
   echo "  [Web]: https://github.com/GreatSCT/GreatSCT | [Twitter]: @ConsciousHacker"
   echo " =========================================================================="
   echo ""
-  #echo "Debug:      userhomedir = ${HOME}"
-  #echo "Debug:          rootdir = ${rootdir}"
-  #echo "Debug:         trueuser = ${trueuser}"
-  #echo "Debug: userprimarygroup = ${userprimarygroup}"
-  #echo "Debug:               os = ${os}"
-  #echo "Debug:          version = ${version}"
-  #echo ""
+  echo "Debug:      userhomedir = ${HOME}"
+  echo "Debug:          rootdir = ${rootdir}"
+  echo "Debug:         trueuser = ${trueuser}"
+  echo "Debug: userprimarygroup = ${userprimarygroup}"
+  echo "Debug:               os = ${os}"
+  echo "Debug:          version = ${version}"
+  echo "Debug:          winedir = ${winedir}"
+  echo ""
 }
 
 # Trap CTRl-C
@@ -124,8 +126,15 @@ func_package_deps(){
 
   # Start dependency install
   echo -e "\n\n [*] ${YELLOW}Installing dependencies${RESET}"
-  if [ "${os}" == "debian" ] || [ "${os}" == "kali" ] || [ "${os}" == "parrot" ] || [ "${os}" == "ubuntu" ] || [ "${os}" == "deepin" ] || [ "${os}" == "linuxmint" ]; then
-    sudo ${arg} apt-get -y install monodevelop mono-mcs unzip wget git ruby
+  if [ "${os}" == "debian" ] || [ "${os}" == "kali" ] || [ "${os}" == "parrot" ] || [ "${os}" == "ubuntu" ] || [ "${os}" == "deepin" ] || [ "${os}" == "linuxmint" ]; then  
+    if [ "${arch}" == "x86_64" ]; then
+      echo -e "\n [*] ${YELLOW}Adding x86 architecture to x86_64 system for Wine${RESET}\n"
+      sudo ${arg} dpkg --add-architecture i386
+      sudo ${arg} apt-get -qq update -y
+      sudo ${arg} apt-get -y -qq install monodevelop mono-mcs unzip wget git ruby p7zip wine wine32 wine64 winbind
+      func_get_powershell_dll
+      func_install_wine_dotnettojscript
+    fi
 
   elif [ "${os}" == '"elementary"' ]; then
     sudo ${arg} apt-get -y install monodevelop mono-mcs unzip wget git ruby
@@ -193,6 +202,36 @@ func_update_config(){
 
 ########################################################################
 
+func_get_powershell_dll(){
+
+  mkdir /tmp/nuget/
+  wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O /tmp/nuget/nuget
+  chmod +x /tmp/nuget/nuget
+  /tmp/nuget/nuget install System.Management.Automation -OutputDirectory /tmp/nuget/
+  mkdir /usr/share/powershell/
+  cp /tmp/nuget/*/lib/net45/System.Management.Automation.dll /usr/share/powershell/System.Management.Automation.dll
+  rm -rf /tmp/nuget
+
+}
+
+func_install_wine_dotnettojscript(){
+  mkdir /tmp/greatsct/
+  cd /tmp/greatsct
+  # I'll move this to a git repo
+  wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+  mv ./winetricks /usr/bin/winetricks
+  chmod +x /usr/bin/winetricks
+  wget https://blog.conscioushacker.io/wine.tgz
+  tar zxf ./wine.tgz
+  sudo dpkg -i ./*.deb
+  WINEARCH=win32 WINEPREFIX="$winedir" winecfg
+  WINEARCH=win32 WINEPREFIX="$winedir" winetricks -q dotnet35
+  mkdir /usr/share/greatsct
+  cd /usr/share/greatsct
+  wget https://github.com/tyranid/DotNetToJScript/releases/download/v1.0.4/release_v1.0.4.7z
+  7z x ./release_v1.0.4.7z
+  
+}
 
 # Print banner
 func_title
@@ -253,14 +292,6 @@ else
     exit 1
   fi
 fi
-
-mkdir /tmp/nuget/
-wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -O /tmp/nuget/nuget
-chmod +x /tmp/nuget/nuget
-/tmp/nuget/nuget install System.Management.Automation -OutputDirectory /tmp/nuget/
-mkdir /usr/share/powershell/
-cp /tmp/nuget/*/lib/net45/System.Management.Automation.dll /usr/share/powershell/System.Management.Automation.dll
-rm -rf /tmp/nuget
 
 # Trap ctrl-c
 trap ctrl_c INT

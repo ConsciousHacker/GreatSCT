@@ -46,6 +46,10 @@ def generateConfig(options):
     config += 'TERMINAL_CLEAR="' + options['TERMINAL_CLEAR'] + '"\n\n'
     print(" [*] TERMINAL_CLEAR = " + options['TERMINAL_CLEAR'])
 
+    config += '# Wine environment\n'
+    config += 'WINEPREFIX="' + options["WINEPREFIX"] + '"\n\n'
+    print(" [*] WINEPREFIX = " + options["WINEPREFIX"])
+
     config += '# Path to temporary directory\n'
     config += 'TEMP_DIR="' + options["TEMP_DIR"] + '"\n\n'
     print(" [*] TEMP_DIR = " + options["TEMP_DIR"])
@@ -159,6 +163,16 @@ if __name__ == '__main__':
         # last of the general options
         options["TEMP_DIR"] = "/tmp/"
         options["MSFVENOM_OPTIONS"] = ""
+
+        # Get the real user if we're being ran under sudo
+        wineprefix = ""
+        user = os.environ.get("SUDO_USER", pwd.getpwuid(os.getuid()).pw_name)
+        if user == 'root':
+            wineprefix = "/root/.greatsct/"
+        else:
+            wineprefix = "/home/{0}/.greatsct/".format(user)
+        
+        options["WINEPREFIX"] = wineprefix
 
         # GreatSCT-Bypass specific options
         greatsct_bypass_path = "/".join(os.getcwd().split("/")[:-1]) + "/"

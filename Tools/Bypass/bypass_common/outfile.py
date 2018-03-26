@@ -3,8 +3,8 @@
 import hashlib
 import os
 import sys
-from Tools.Bypass.bypass_common import bypass_helpers
-from lib.common import helpers
+from Tools.Bypass.bypass_common import bypass_helpers # pylint: disable=E0611,E0401
+from lib.common import helpers # pylint: disable=E0611,E0401
 
 # try to find and import the settings.py config file
 if os.path.exists("/etc/greatsct/settings.py"):
@@ -197,6 +197,30 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
             print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+        
+        elif payload_object.language == 'mshta':
+
+            bypass_helpers.title_screen()
+            print_payload_information(payload_object)
+
+            if payload_object.required_options['SCRIPT_TYPE'][0].lower() == 'jscript':
+
+                print(" [*] Source code written to: " +
+                    helpers.color(source_code_filepath))
+
+                print(" [*] HTA code written to: " +
+                    helpers.color(executable_filepath))
+           
+            elif payload_object.required_options['SCRIPT_TYPE'][0].lower() == 'vbscript':
+                
+                print(" [*] Source code written to: " +
+                      helpers.color(source_code_filepath))
+
+                print(" [*] HTA code written to: " +
+                      helpers.color(executable_filepath))
+
+            else:
+                print(helpers.color("\n[!] Error: Script type not supported!\n", warning=True))
 
         else:
             print(helpers.color("\n [!] ERROR: Invalid payload language in payload module.\n", warning=True))

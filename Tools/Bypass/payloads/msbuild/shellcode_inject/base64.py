@@ -12,9 +12,9 @@ Module built by @ConsciousHacker
 """
 
 import base64
-from Tools.Bypass.bypass_common import bypass_helpers
-from Tools.Bypass.bypass_common import gamemaker
-from Tools.Bypass.bypass_common import shellcode_help
+from Tools.Bypass.bypass_common import bypass_helpers  # pylint: disable=E0611,E0401
+from Tools.Bypass.bypass_common import gamemaker  # pylint: disable=E0611,E0401
+from Tools.Bypass.bypass_common import shellcode_help  # pylint: disable=E0611,E0401
 
 
 class PayloadModule:

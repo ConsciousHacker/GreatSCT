@@ -59,7 +59,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    the_conductor = orchestra.Conductor(args)
+    try:
+        the_conductor = orchestra.Conductor(args)
+    except NameError:
+        print("ERROR: You forgot to run the setup script!")
+        sys.exit()
 
     if args.h:
         parser.print_help()

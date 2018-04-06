@@ -3,6 +3,8 @@ Bypass Encryption Routines
 """
 
 import base64
+import re
+import random
 
 def rc4(key, data):
     S = list(range(256))
@@ -21,4 +23,3 @@ def rc4(key, data):
         out.append(chr(ord(char) ^ S[(S[i] + S[j]) % 256]))
 
     return ''.join(out)
-

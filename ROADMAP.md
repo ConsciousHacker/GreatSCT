@@ -10,16 +10,16 @@ This is the GreatSCT 1.0 development roadmap.
 - [x] msbuild/shellcode_inject/virtual.py - Chris
 - [x] msbuild/shellcode_inject/base64.py - Chris
 - [ ] msbuild/powershell/cmd.py
-- [ ] msbuild/powershell/script.py
+- [x] msbuild/powershell/script.py - Chris
 
 ### InstallUtil
 - [x] installutil/meterpreter/rev_https - Chris
 - [x] installutil/meterpreter/rev_http - Chris
 - [x] installutil/meterpreter/rev_tcp - Chris
-- [ ] installutil/shellcode_inject/virtual.py
+- [x] installutil/shellcode_inject/virtual.py
 - [x] installutil/shellcode_inject/base64.py - Chris
 - [ ] installutil/powershell/cmd.py
-- [ ] installutil/powershell/script.py
+- [x] installutil/powershell/script.py - Chris
 
 ### Mshta
 - [ ] mshta/meterpreter/rev_https
@@ -34,22 +34,22 @@ This is the GreatSCT 1.0 development roadmap.
 - [ ] mshta/msbuild/*
 
 ### Regasm
-- [ ] regasm/meterpreter/rev_https
-- [ ] regasm/meterpreter/rev_http
-- [ ] regasm/meterpreter/rev_tcp
-- [ ] regasm/shellcode_inject/virtual.py
-- [ ] regasm/shellcode_inject/base64.py
+- [x] regasm/meterpreter/rev_https - Chris
+- [x] regasm/meterpreter/rev_http - Chris
+- [x] regasm/meterpreter/rev_tcp - Chris
+- [x] regasm/shellcode_inject/virtual.py - Chris
+- [x] regasm/shellcode_inject/base64.py - Chris
 - [ ] regasm/powershell/cmd.py
-- [ ] regasm/powershell/script.py
+- [x] regasm/powershell/script.py - Chris
 
 ### Regsvcs
-- [ ] regsvcs/meterpreter/rev_https
-- [ ] regsvcs/meterpreter/rev_http
-- [ ] regsvcs/meterpreter/rev_tcp
-- [ ] regsvcs/shellcode_inject/virtual.py
-- [ ] regsvcs/shellcode_inject/base64.py
+- [x] regsvcs/meterpreter/rev_https - Chris
+- [x] regsvcs/meterpreter/rev_http - Chris
+- [x] regsvcs/meterpreter/rev_tcp - Chris
+- [x] regsvcs/shellcode_inject/virtual.py - Chris
+- [x] regsvcs/shellcode_inject/base64.py - Chris
 - [ ] regsvcs/powershell/cmd.py
-- [ ] regsvcs/powershell/script.py
+- [x] regsvcs/powershell/script.py - Chris
 
 ### Regsvr32
 - [ ] regsvr32/meterpreter/rev_https
@@ -60,14 +60,14 @@ This is the GreatSCT 1.0 development roadmap.
 - [ ] regsvr32/powershell/cmd.py
 - [ ] regsvr32/powershell/script.py
 
-### Rundll32
-- [ ] rundll32/meterpreter/rev_https
-- [ ] rundll32/meterpreter/rev_http
-- [ ] rundll32/meterpreter/rev_tcp
-- [ ] rundll32/shellcode_inject/virtual.py
-- [ ] rundll32/shellcode_inject/base64.py
-- [ ] rundll32/powershell/cmd.py
-- [ ] rundll32/powershell/script.py
+###  pubprn.vbs
+- [ ] pubprn/meterpreter/rev_https
+- [ ] pubprn/meterpreter/rev_http
+- [ ] pubprn/meterpreter/rev_tcp
+- [ ] pubprn/shellcode_inject/virtual.py
+- [ ] pubprn/shellcode_inject/base64.py
+- [ ] pubprn/powershell/cmd.py
+- [ ] pubprn/powershell/script.py
 
 ## Features
 
@@ -78,6 +78,10 @@ This is the GreatSCT 1.0 development roadmap.
     + [x] ASCII encoding - Chris
     + [ ] Binary encoding
     + [ ] Any other favorites?
+
+## TODO
+- [ ] Modify setup script to support all the Linux distributions
+- [ ] Make C# imports more dynamic
 
 ## Decisions
 - Implement phyperion encryption for exe and dll payloads

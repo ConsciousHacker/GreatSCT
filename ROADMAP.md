@@ -80,6 +80,7 @@ This is the GreatSCT 1.0 development roadmap.
     + [ ] Any other favorites?
 
 ## TODO
+- [ ] Fix CLI generation
 - [ ] Modify setup script to support all the Linux distributions
 - [ ] Make C# imports more dynamic
 

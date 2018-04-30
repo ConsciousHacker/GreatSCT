@@ -36,6 +36,11 @@ if __name__ == "__main__":
     callback_args.add_argument(
         '--port', metavar="Port Number", default=443, type=int,
         help="Port number to connect to.")
+    
+    payload_args = parser.add_argument_group('[*] Payload Settings')
+    payload_args.add_argument(
+        '--list-payloads', default=False, action='store_true',
+        help='Lists all available payloads for that tool')
 
     greatsctbypass = parser.add_argument_group('Great Scott Options')
     greatsctbypass.add_argument(

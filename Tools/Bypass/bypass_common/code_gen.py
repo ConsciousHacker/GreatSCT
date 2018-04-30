@@ -209,6 +209,7 @@ def genCSharpShellCodeMigration(process, gamemaker_code):
 
 def genRC4JScript(payload, key, obfuscate):
 	# TODO: obfuscate
+	
 	code = "<script language = \"javascript\">"
 
 	code += """rc4 = function(key, str) {

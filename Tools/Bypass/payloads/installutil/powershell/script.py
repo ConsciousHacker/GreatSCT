@@ -46,7 +46,7 @@ class PayloadModule:
                                     "SLEEP"          : ["X", "Optional: Sleep \"Y\" seconds, check if accelerated"],
                                     "SCRIPT"         : ["/root/script.ps1", "Path of the powershell script"],
                                     "FUNCTION"       : ["X", "Optional: Function to execute within the powershell script"],
-                                    "OBFUSCATION"    : ["X", "Optional: Use python Invoke-Obfuscation on the powershell script"]
+                                    "OBFUSCATION"    : ["X", "Optional: Use python Invoke-Obfuscation on the powershell script (binary or ascii)"]
                                 }
 
     def generate(self):
@@ -62,8 +62,12 @@ class PayloadModule:
             FunctionName = "\"None\""
 
         if self.required_options["OBFUSCATION"][0].lower() != "x":
-            the_script = invoke_obfuscation.asciiEncode(the_script)
-
+            if self.required_options["OBFUSCATION"][0].lower() == "binary":
+                the_script = invoke_obfuscation.binaryEncode(the_script)
+            elif self.required_options["OBFUSCATION"][0].lower() == "ascii":
+                the_script = invoke_obfuscation.asciiEncode(the_script)
+            else:
+                the_script = invoke_obfuscation.binaryEncode(the_script)
 
         # randomize all our variable names, yo'
         className = bypass_helpers.randomString()

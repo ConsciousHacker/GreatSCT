@@ -73,6 +73,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
                 print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+                print(" [*] Execute with: " + helpers.color("C:\Windows\Microsoft.NET\Framework\\v4.0.30319\\InstallUtil.exe /logfile= /LogToConsole=false {0}.exe".format(file_name)))
 
             elif payload_object.required_options['COMPILE_TO_DLL'][0].lower() == 'y':
                 # Compile our CS code into an executable and pass a compiler flag to prevent it from opening a command prompt when run
@@ -87,6 +88,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
                 print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+                print(" [*] Execute with: " + helpers.color("C:\Windows\Microsoft.NET\Framework\\v4.0.30319\\InstallUtil.exe /logfile= /LogToConsole=false {0}.dll".format(file_name)))
 
         elif payload_object.language == 'installutil_powershell':
             if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
@@ -102,6 +104,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
                 print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+                print(" [*] Execute with: " + helpers.color("C:\Windows\Microsoft.NET\Framework\\v4.0.30319\\InstallUtil.exe /logfile= /LogToConsole=false {0}.exe".format(file_name)))
 
             elif payload_object.required_options['COMPILE_TO_DLL'][0].lower() == 'y':
                 # Compile our CS code into an executable and pass a compiler flag to prevent it from opening a command prompt when run
@@ -116,6 +119,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
                 print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+                print(" [*] Execute with: " + helpers.color("C:\Windows\Microsoft.NET\Framework\\v4.0.30319\\InstallUtil.exe /logfile= /LogToConsole=false {0}.dll".format(file_name)))
 
         elif payload_object.language == 'regasm':
 
@@ -132,6 +136,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
                 print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+                print(" [*] Execute with: " + helpers.color("C:\Windows\Microsoft.NET\Framework\\v4.0.30319\\regasm.exe /U {0}.dll".format(file_name)))
 
         elif payload_object.language == 'regasm_powershell':
 
@@ -148,6 +153,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
                 print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+                print(" [*] Execute with: " + helpers.color("C:\Windows\Microsoft.NET\Framework\\v4.0.30319\\regasm.exe /U {0}.dll".format(file_name)))
 
         elif payload_object.language == 'regsvcs':
 
@@ -166,6 +172,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
                 print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+                print(" [*] Execute with: " + helpers.color("C:\Windows\Microsoft.NET\Framework\\v4.0.30319\\regsvcs.exe {0}.dll".format(file_name)))
 
         elif payload_object.language == 'regsvcs_powershell':
 
@@ -182,6 +189,7 @@ def compiler(payload_object, invoked=False, cli_object=None):
                 else:
                     print(helpers.color(" [!] ERROR: Unable to create output file.", warning=True))
                 print(" [*] Source code written to: " + helpers.color(source_code_filepath))
+                print(" [*] Execute with: " + helpers.color("C:\Windows\Microsoft.NET\Framework\\v4.0.30319\\regsvcs.exe {0}.dll".format(file_name)))
 
         elif payload_object.language == 'c':
             if payload_object.required_options['COMPILE_TO_EXE'][0].lower() == 'y':
@@ -205,19 +213,18 @@ def compiler(payload_object, invoked=False, cli_object=None):
 
             if payload_object.required_options['SCRIPT_TYPE'][0].lower() == 'jscript':
 
-                print(" [*] Source code written to: " +
-                    helpers.color(source_code_filepath))
-
                 print(" [*] HTA code written to: " +
-                    helpers.color(executable_filepath))
+                    helpers.color(source_code_filepath))
+                
+                print(" [*] Execute with: " + helpers.color("mshta.exe {0}.hta".format(file_name)))
+
            
             elif payload_object.required_options['SCRIPT_TYPE'][0].lower() == 'vbscript':
                 
-                print(" [*] Source code written to: " +
+                print(" [*] HTA code written to: " +
                       helpers.color(source_code_filepath))
 
-                print(" [*] HTA code written to: " +
-                      helpers.color(executable_filepath))
+                print(" [*] Execute with: " + helpers.color("mshta.exe {0}.hta".format(file_name)))
 
             else:
                 print(helpers.color("\n[!] Error: Script type not supported!\n", warning=True))

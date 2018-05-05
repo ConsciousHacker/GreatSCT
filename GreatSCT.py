@@ -26,15 +26,15 @@ if __name__ == "__main__":
         '--list-tools', action="store_true", default=False,
         help='List GreatSCT\'s tools')
     greatsctframework.add_argument(
-        '-t', '--tool', metavar='Great Scott!', default=False,
-        help='Specify GreatSCT tool to use')
+        '-t', '--tool', metavar='Bypass', default=False,
+        help='Specify GreatSCT tool to use (Bypass)')
 
     callback_args = parser.add_argument_group('Callback Settings')
     callback_args.add_argument(
-        "--ip", "--domain", metavar="IP Address", default=None,
+        "--ip", "--domain", metavar="IP", default=None,
         help="IP Address to connect back to")
     callback_args.add_argument(
-        '--port', metavar="Port Number", default=443, type=int,
+        '--port', metavar="Port", default=443, type=int,
         help="Port number to connect to.")
     
     payload_args = parser.add_argument_group('[*] Payload Settings')

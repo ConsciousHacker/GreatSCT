@@ -64,7 +64,7 @@ Available Commands:
 	info			Information on a specific tool
 	list			List available tools
 	update			Update GreatSCT
-	use			    Use a specific tool
+	use			Use a specific tool
 
 Main menu choice: 
 

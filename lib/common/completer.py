@@ -214,9 +214,9 @@ class PayloadCompleter(object):
                 elif args[0].strip().endswith("_source"):
                     # tab-complete a file path for an exe
                     res = self.complete_path(args)
-                # elif args[0].strip() == "other path-needing option":
-                #     # tab-complete a file path
-                #     res = self.complete_path(args)
+                elif args[0].strip() == "SCRIPT":
+                    # tab-complete a file path
+                    res = self.complete_path(args)
                 else:
                     # complete the command in the list ONLY if it's partially completed
                     res = [o + ' ' for o in options if (o.startswith(args[0]) and o != args[0])] + [None]

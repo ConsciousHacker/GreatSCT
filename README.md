@@ -24,7 +24,7 @@ Install by cloning from git, not via apt!
 
 ```bash
 apt-get -y install git
-git clone https://github.com/ConsciousHacker/GreatSCT.git
+git clone https://github.com/GreatSCT/GreatSCT.git
 cd GreatSCT/
 cd setup
 sudo ./setup.sh -c

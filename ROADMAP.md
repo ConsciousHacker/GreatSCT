@@ -39,7 +39,7 @@ This is the GreatSCT 1.0 development roadmap.
 - [x] regsvcs/powershell/script.py - Chris
 
 ### Regsvr32
-- [ ] regsvr32/shellcode_inject/base64_migrate.py
+- [x] regsvr32/shellcode_inject/base64_migrate.py
 
 ## Features
 
@@ -52,6 +52,6 @@ This is the GreatSCT 1.0 development roadmap.
 
 ## TODO
 - [x] Fix CLI generation
-- [ ] Modify setup script to support all the Linux distributions
-- [ ] Make C# imports more dynamic
-- [ ] Add Process based sandbox evasion for all payloads
+- [ ] Modify setup script to support all the Linux distributions - Not enough time for 1.0, aim for next minor revision
+- [ ] Make C# imports more dynamic - Not enough time for 1.0, aim for next minor revision
+- [ ] Add Process based sandbox evasion for all payloads - Not enough time for 1.0, aim for next minor revision

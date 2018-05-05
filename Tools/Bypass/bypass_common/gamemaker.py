@@ -89,6 +89,9 @@ def senecas_games(bypass_payload):
     elif bypass_payload.language == "mshta":
         return check_code, num_tabs_required
 
+    elif bypass_payload.language == "regsvr32":
+        return check_code, num_tabs_required
+
     elif bypass_payload.language == 'installutil' or 'installutil_powershell':
         if bypass_payload.required_options["EXPIRE_PAYLOAD"][0].lower() != "x":
 

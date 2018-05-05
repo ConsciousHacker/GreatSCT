@@ -41,6 +41,10 @@ if __name__ == "__main__":
     payload_args.add_argument(
         '--list-payloads', default=False, action='store_true',
         help='Lists all available payloads for that tool')
+    payload_args.add_argument(
+        '--generate-awl', action="store_true", default=False, 
+        help="Generate all bypasses in the framework"
+    )
 
     greatsctbypass = parser.add_argument_group('Great Scott Options')
     greatsctbypass.add_argument(

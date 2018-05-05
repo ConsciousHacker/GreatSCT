@@ -127,6 +127,9 @@ class Tools:
     def cli_menu(self, invoked=False):
         if self.command_options.list_payloads:
             self.list_loaded_payloads()
+        
+        if self.command_options.generate_awl:
+            self.generate_awl()
 
         # check if a payload is provided, and if so, start the generation
         # process
@@ -226,6 +229,13 @@ class Tools:
             x += 1
         print("\n")
         return
+    
+    def generate_awl(self):
+
+        ip = subprocess.getoutput("ip a").split("\n")[8][9:].split('/')[0]
+        for name in sorted(self.active_payloads.keys()):
+            os.system("python3 /opt/GreatSCT/GreatSCT.py --ip {0} --port 443 -t Bypass -p {1}".format(ip, name))
+
 
     def load_payloads(self, cli_args):
         for x in range(1, 5):

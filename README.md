@@ -8,7 +8,9 @@ GreatSCT is current under support by @ConsciousHacker
 
 ### Linux
 
-1.  Debian or Kali - run the setup script - sudo ./setup.sh -c
+1.  Kali - run the setup script - sudo ./setup.sh -c
+
+> NOTE: Support for distributions other than Kali Linux will be coming soon.
 
 ## Setup (tl;dr)
 
